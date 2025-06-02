@@ -39,3 +39,12 @@ func (h *RegisterHandler) Login(c *gin.Context) {
     }
     c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+// // POST /api/logout
+// func (h *RegisterHandler) Logout(c *gin.Context) {
+//     // Extract JWT from header
+//     token := extractTokenFromHeader(c)
+//     // Add token to blacklist (e.g., Redis)
+//     blacklistToken(token)
+//     c.JSON(200, gin.H{"message": "Logged out"})
+// }

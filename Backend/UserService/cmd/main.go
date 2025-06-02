@@ -4,6 +4,7 @@ import (
     
 	"UserService/internal/database"
 	"UserService/internal/routes"
+	"UserService/internal/config"
 )
 
 
@@ -13,7 +14,9 @@ func main() {
     database.InitDB()
 	
 
+	serverPort := config.Load().Port
 
     r := routes.Setup()
-    r.Run(":8081")
+
+    r.Run(":" + serverPort) // Use the port from the config
 }

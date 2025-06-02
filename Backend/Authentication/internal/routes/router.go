@@ -15,6 +15,6 @@ func Setup() *gin.Engine {
     reg := RegisterHandler{}
     auth.POST("/register", reg.Handle)
     auth.POST("/login", reg.Login)
-
+	// auth.POST("/logout", reg.Logout)
     return r
 }

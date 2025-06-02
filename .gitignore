@@ -5,3 +5,5 @@ Backend/Authentication/.env
 docker-compose.yml
 
 Backend/UserService/.env 
+
+Backend/VideoService/.env

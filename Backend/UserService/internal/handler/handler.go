@@ -9,6 +9,7 @@ import (
 
 // RegisterHandler handles POST /updateUser
 type RegisterHandler struct{}
+
 func (h *RegisterHandler) Handle(c *gin.Context) {
 	var req DTO.UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
