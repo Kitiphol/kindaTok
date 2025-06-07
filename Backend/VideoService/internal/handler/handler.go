@@ -20,18 +20,30 @@ func (h *VideoHandler) GetAllVideos(c *gin.Context) {
 
 func (h *VideoHandler) GetAllVideosForUser(c *gin.Context) {
     userID := c.Param("userID")
-    videos, err := service.GetAllVideosForUser(userID)
+
+    //this presignURL should be Thumbnail URLs
+    presignURL, err := service.GetAllVideosForUser(userID)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, videos)
+    c.JSON(http.StatusOK, presignURL)
 }
 
 func (h *VideoHandler) GetVideoForUser(c *gin.Context) {
     userID := c.Param("userID")
     videoID := c.Param("videoID")
-    video, err := service.GetVideoForUser(userID, videoID)
+    presignURL, err := service.GetVideoForUser(userID, videoID)
+    if err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+        return
+    }
+    c.JSON(http.StatusOK, presignURL)
+}
+
+func (h *VideoHandler) GetVideoForAllUser(c *gin.Context) {
+    videoID := c.Param("videoID")
+    video, err := service.GetVideoForAllUser(videoID)
     if err != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
         return
@@ -46,12 +58,13 @@ func (h *VideoHandler) CreateVideoForUser(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    video, err := service.CreateVideoForUser(userID, req)
+   presignURL, err := service.CreateVideoForUser(userID, req)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusCreated, video)
+    c.JSON(http.StatusCreated, gin.H{"message": "Video created successfully", "presignURL": presignURL})
+
 }
 
 func (h *VideoHandler) UpdateVideoForUser(c *gin.Context) {
@@ -62,12 +75,13 @@ func (h *VideoHandler) UpdateVideoForUser(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    video, err := service.UpdateVideoForUser(userID, videoID, req)
+    err := service.UpdateVideoForUser(userID, videoID, req)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, video)
+    c.JSON(http.StatusOK, gin.H{
+        "message": "Video updated successfully"} )
 }
 
 func (h *VideoHandler) DeleteVideoForUser(c *gin.Context) {
@@ -78,5 +92,9 @@ func (h *VideoHandler) DeleteVideoForUser(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
+
+    
+    // Optionally, you can also delete the video file from S3 here
+    
     c.JSON(http.StatusOK, gin.H{"message": "Video deleted"})
 }

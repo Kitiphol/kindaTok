@@ -15,6 +15,8 @@ func Setup() *gin.Engine {
 
 	r.GET("/videos", videoHandler.GetAllVideos)
 
+	r.GET("/videos/:videoID", videoHandler.GetVideoForAllUser)
+
     user := r.Group("/users")
 
     // Get all videos for a user
