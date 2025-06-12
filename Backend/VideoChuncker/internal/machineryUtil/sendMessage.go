@@ -1,27 +1,15 @@
 package machineryutil
 
 import (
+    "github.com/RichardKnop/machinery/v2"
     "github.com/RichardKnop/machinery/v2/tasks"
 )
 
-
-func SendExampleMessage() error {
-    server, err := CreateMachineryServer()
-    if err != nil {
-        return err
-    }
-
-    // Define the task signature (replace "YourTaskName" and args as needed)
+func SendTaskToConvertor(server *machinery.Server, taskName string, args ...tasks.Arg) error {
     signature := &tasks.Signature{
-        Name: "YourTaskName",
-        Args: []tasks.Arg{
-            {
-                Type:  "string",
-                Value: "Hello, World!",
-            },
-        },
+        Name: taskName,
+        Args: args,
     }
-
-    _, err = server.SendTask(signature)
+    _, err := server.SendTask(signature)
     return err
 }
