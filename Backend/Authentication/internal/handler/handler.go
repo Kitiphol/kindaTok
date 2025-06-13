@@ -1,3 +1,4 @@
+// internal/handler/handler.go
 package handler
 
 import (
@@ -5,12 +6,14 @@ import (
 
     "github.com/gin-gonic/gin"
     "Auth/internal/service"
-	"Auth/internal/DTO"
+    "Auth/internal/DTO"
+    "Auth/internal/middleware"
 )
 
-// RegisterHandler handles POST /register
+// RegisterHandler handles registration and login
 type RegisterHandler struct{}
 
+// Handle registration
 func (h *RegisterHandler) Handle(c *gin.Context) {
     var req DTO.RegisterRequest
     if err := c.ShouldBindJSON(&req); err != nil {
@@ -25,7 +28,7 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
-// LoginHandler handles POST /login
+// Login handles login
 func (h *RegisterHandler) Login(c *gin.Context) {
     var req DTO.LoginRequest
     if err := c.ShouldBindJSON(&req); err != nil {
@@ -40,11 +43,12 @@ func (h *RegisterHandler) Login(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
-// // POST /api/logout
-// func (h *RegisterHandler) Logout(c *gin.Context) {
-//     // Extract JWT from header
-//     token := extractTokenFromHeader(c)
-//     // Add token to blacklist (e.g., Redis)
-//     blacklistToken(token)
-//     c.JSON(200, gin.H{"message": "Logged out"})
-// }
+
+func Profile(c *gin.Context) {
+    userID, err := middleware.GetUserIDFromContext(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+        return
+    }
+    c.JSON(http.StatusOK, gin.H{"userID": userID.String()})
+}

@@ -13,6 +13,7 @@ type Config struct {
     Port        string
 }
 
+
 func Load() Config {
     user := os.Getenv("POSTGRES_USER")
     pass := os.Getenv("POSTGRES_PASS")

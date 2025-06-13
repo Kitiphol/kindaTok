@@ -33,7 +33,9 @@ func ConvertChunks(ctx context.Context, server *machinery.Server, bucket string,
     if len(parts) < 2 {
         return fmt.Errorf("invalid chunk key format: expected 'folder/chunk_xxx.mp4'")
     }
-    folderName := parts[0] // e.g. "lecture"
+
+    // folderName = {filename}
+    folderName := parts[0] // e.g. "USDFJ-SKLF_lecture"
     hlsDir := filepath.Join(os.TempDir(), folderName)
     os.MkdirAll(hlsDir, 0755)
 
@@ -62,6 +64,7 @@ func ConvertChunks(ctx context.Context, server *machinery.Server, bucket string,
         playlistLines = append(playlistLines, "#EXTINF:10.0,", segmentFilename)
 
         // Upload segment to R2
+        // r2Key should be {filename = LDKLJSFLSDJ-sdfKFLSDFSD_hello}/segmentX.ts
         r2Key := fmt.Sprintf("%s/%s", folderName, segmentFilename)
         if err := s3util.UploadFile(bucket, r2Key, segmentPath); err != nil {
             return fmt.Errorf("failed to upload segment %s: %w", r2Key, err)
@@ -114,8 +117,8 @@ func ConvertChunks(ctx context.Context, server *machinery.Server, bucket string,
 
 
 
-        // should send bucket/{filename}/segment_0.ts
-        if err := SendTaskToThumbnailCreator(server, bucket, firstSegmentKey); err != nil {
+        // should send bucket/{filename}/segment0.ts
+        if err := SendTaskToThumbnailCreator(server, bucket, firstSegmentKey, "segment0.ts"); err != nil {
             // Log the error but don't fail the entire operation
             fmt.Errorf("Warning: failed to send thumbnail creation task: %v", err)
         }

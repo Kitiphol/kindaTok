@@ -11,19 +11,23 @@ import (
 )
 
 
-func CreateVideoForUser(userID string, req DTO.CreateVideoRequest) (string, error) {
-	videoID := uuid.New()
+func CreateVideoForUser(userID uuid.UUID, req DTO.CreateVideoRequest) (string, error) {
+    videoID := uuid.New()
     uniqueFilename := fmt.Sprintf("videos/%s_%s", videoID.String(), req.Filename)
-	video := entity.Video{
+
+    video := entity.Video{
         ID:           videoID,
         Title:        req.Title,
         Filename:     uniqueFilename,
-        UserID:       uuid.MustParse(userID),
-        // S3URL:        req.S3URL,
-        // ThumbnailURL: req.ThumbnailURL,
+        UserID:       userID,
     }
-    err := database.DB.Create(&video).Error
+    if err := database.DB.Create(&video).Error; err != nil {
+        return "", err
+    }
 
-	presignURL, err := s3util.GeneratePresignedPutURL("toktikp2-video", uniqueFilename, 300)
-    return presignURL, err
+    presignURL, err := s3util.GeneratePresignedPutURL("toktikp2-video", uniqueFilename, 300)
+    if err != nil {
+        return "", err
+    }
+    return presignURL, nil
 }

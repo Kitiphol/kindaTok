@@ -3,6 +3,7 @@ package routes
 import (
     "github.com/gin-gonic/gin"
     "VideoService/internal/handler"
+    "VideoService/internal/middleware"
 )
 
 // Setup creates the Gin router and routes
@@ -15,26 +16,36 @@ func Setup() *gin.Engine {
 
 	r.GET("/videos", videoHandler.GetAllVideos)
 
-	r.GET("/videos/:videoID", videoHandler.GetVideoForAllUser)
+    protected := r.Group("/", middleware.AuthMiddleware()) 
+    {
 
-    user := r.Group("/users")
+        protected.GET("/videos/:videoID", videoHandler.GetVideoForAllUser)
 
-    // Get all videos for a user
-	// by using :userID, you define it as a dynamic variable 
-	// that can be parsed in gin in the handler functions
-    user.GET("/:userID/videos", videoHandler.GetAllVideosForUser)
+        user := protected.Group("/users") 
+        {
 
-    // Get a specific video for a user
-    user.GET("/:userID/videos/:videoID", videoHandler.GetVideoForUser)
+                // Get all videos for a user
+            // by using :userID, you define it as a dynamic variable 
+            // that can be parsed in gin in the handler functions
+            user.GET("/:userID/videos", videoHandler.GetAllVideosForUser)
 
-    // Create a new video for a user
-    user.POST("/:userID/videos", videoHandler.CreateVideoForUser)
+            // Get a specific video for a user
+            user.GET("/:userID/videos/:videoID", videoHandler.GetVideoForUser)
 
-    // (Update a specific video for a user
-    user.PUT("/:userID/videos/:videoID", videoHandler.UpdateVideoForUser)
+            // Create a new video for a user
+            user.POST("/:userID/videos", videoHandler.CreateVideoForUser)
 
-    // Delete a specific video for a user
-    user.DELETE("/:userID/videos/:videoID", videoHandler.DeleteVideoForUser)
+            // (Update a specific video for a user
+            user.PUT("/:userID/videos/:videoID", videoHandler.UpdateVideoForUser)
 
+            // Delete a specific video for a user
+            user.DELETE("/:userID/videos/:videoID", videoHandler.DeleteVideoForUser)
+
+        }
+    }
+	
+
+
+    
     return r
 }

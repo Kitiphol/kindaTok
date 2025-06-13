@@ -5,12 +5,13 @@ import (
     "github.com/RichardKnop/machinery/v2/tasks"
 )
 
-func SendTaskToThumbnailCreator(server *machinery.Server, bucket, objectKey string) error {
+func SendTaskToThumbnailCreator(server *machinery.Server, bucket, folder, segmentFilename string) error {
     signature := &tasks.Signature{
         Name: "CreateThumbnail",
         Args: []tasks.Arg{
             {Type: "string", Value: bucket},
-            {Type: "string", Value: objectKey},
+            {Type: "string", Value: folder},
+            {Type: "string", Value: segmentFilename},
         },
     }
     _, err := server.SendTask(signature)

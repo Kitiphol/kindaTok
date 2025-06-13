@@ -6,24 +6,24 @@ import (
     "VideoService/internal/entity"
     "VideoService/internal/database"
 	"VideoService/internal/s3util"
+	"github.com/google/uuid"
 )
 
 
+
 //Should return a presigned URL for the video file since the user looking at the video
-func GetVideoForUser(userID, videoID string) (string, error) {
+func GetVideoForUser(userID, videoID uuid.UUID) (string, error) {
     var video entity.Video
-    err := database.DB.Where("user_id = ? AND id = ?", userID, videoID).Preload("Comments").First(&video).Error
-    if err != nil {
+    if err := database.DB.Where("user_id = ? AND id = ?", userID, videoID).Preload("Comments").First(&video).Error; err != nil {
         return "", errors.New("video not found")
     }
 
-	video.ViewCount++
-	err = database.DB.Save(&video).Error
-	if err != nil {
-		return "", errors.New("Failed to update view count For Specific User")
-	}
+	//update the view count
+    video.ViewCount++
 
-	presignedURL, err := s3util.GeneratePresignedGetURL("toktikp2-video", video.Filename, 90)
-
-    return presignedURL, nil
+    if err := database.DB.Save(&video).Error; err != nil {
+        return "", errors.New("failed to update view count")
+    }
+	
+    return s3util.GeneratePresignedGetURL("toktikp2-video", video.Filename, 90)
 }

@@ -37,3 +37,20 @@ func generateJWT(userID uuid.UUID) (string, error) {
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
     return token.SignedString([]byte(cfg.JWTSecret))
 }
+
+
+
+
+func ExtractUserIDFromToken(tokenStr string) (uuid.UUID, error) {
+    cfg := config.Load()
+    token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+        return []byte(cfg.JWTSecret), nil
+    })
+
+    if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+        userIDStr := claims["sub"].(string)
+        return uuid.Parse(userIDStr)
+    }
+
+    return uuid.Nil, errors.New("Invalid Token, Please Log In Again")
+}

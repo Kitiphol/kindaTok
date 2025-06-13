@@ -3,10 +3,14 @@ package service
 import (
     "VideoService/internal/entity"
     "VideoService/internal/database"
+    "github.com/google/uuid"
+
 )
 
-func GetAllVideosForUser(userID string) ([]entity.Video, error) {
+func GetAllVideosForUser(userID uuid.UUID) ([]entity.Video, error) {
     var videos []entity.Video
-    err := database.DB.Where("user_id = ?", userID).Preload("Comments").Find(&videos).Error
-    return videos, err
+    if err := database.DB.Where("user_id = ?", userID).Preload("Comments").Find(&videos).Error; err != nil {
+        return nil, err
+    }
+    return videos, nil
 }
