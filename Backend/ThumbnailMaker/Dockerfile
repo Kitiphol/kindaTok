@@ -9,6 +9,11 @@ RUN go build -o thumbnail-maker ./cmd/main.go
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/thumbnail-maker .
+
+COPY machinery.yaml .
+
 EXPOSE 8081
+
+
 
 CMD ["./thumbnail-maker"]

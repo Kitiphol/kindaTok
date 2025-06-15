@@ -1,14 +1,14 @@
-// src/components/Auth/LoginForm.tsx
 'use client';
+
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm({
   onClose,
   onSuccessLogin,
 }: {
   onClose: () => void;
-  onSuccessLogin: () => void;
+  onSuccessLogin: (token: string) => void; // ✅ allow passing JWT
 }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,12 +20,32 @@ export default function LoginForm({
       return;
     }
 
-    // Simulate login
-    if (username === 'admin' && password === 'a') {
-      alert('Login successful!');
-      onSuccessLogin();  // ✅ ONLY here!
-    } else {
-      alert('Login failed. Try user@example.com / 1234');
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        mode: 'cors',
+        body: JSON.stringify({ username, password }),
+      });
+
+      const text = await response.text();
+
+      if (response.ok) {
+        const data = JSON.parse(text);
+        const token = data.token;
+
+        if (!token) throw new Error('No token returned from backend.');
+
+        localStorage.setItem('jwtToken', token); // ✅ store with correct key
+        alert('Login successful!');
+        onSuccessLogin(token); // ✅ pass token to parent
+        setTimeout(() => router.push('/'), 1500);
+      } else {
+        alert(text || 'Login failed');
+      }
+    } catch (err) {
+      alert('Login error: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
   };
 
@@ -34,13 +54,13 @@ export default function LoginForm({
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-black">Log In</h2>
         <input
-          className="w-full p-2 mb-3 border rounded"
-          placeholder="username"
+          className="w-full p-2 mb-3 border rounded text-black"
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-2 mb-4 border rounded text-black"
           type="password"
           placeholder="Password"
           value={password}
@@ -53,18 +73,9 @@ export default function LoginForm({
           Log In
         </button>
 
-        
-        <button
-          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 mt-3"
-          onClick={() => router.push('/signup')}
-        >
-          Sign Up
-        </button>
-
-
         <button
           className="mt-4 w-full text-sm text-gray-500 hover:underline"
-          onClick={onClose}     // ✅ Just closes — doesn’t log in
+          onClick={onClose}
         >
           Cancel
         </button>

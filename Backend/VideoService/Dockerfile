@@ -9,6 +9,7 @@ RUN go build -o video-service ./cmd/main.go
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/video-service .
+COPY machinery.yaml .
 EXPOSE 8081
 
 CMD ["./video-service"]

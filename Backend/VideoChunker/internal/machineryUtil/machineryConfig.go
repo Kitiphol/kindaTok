@@ -2,7 +2,7 @@ package machineryUtil
 
 import (
 	"fmt"
-    "ThumbnailCreator/internal/env_config"
+	"VideoChuncker/internal/env_config"
 	"net/url"
 	_ "strings"
 

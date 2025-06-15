@@ -1,18 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LoginForm from './Auth/LoginForm';
 import Sidebar from './Util/Sidebar';
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // fake login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  // Check for JWT token in localStorage on page load
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleVideoClick = (videoNumber: number) => {
     if (!isLoggedIn) {
-      setShowLoginPopup(true); // show login popup
+      setShowLoginPopup(true);
     } else {
-      alert(`Now playing Video ${videoNumber}`); // show video
+      alert(`Now playing Video ${videoNumber}`);
     }
   };
 
@@ -23,8 +31,11 @@ export default function Home() {
       </header>
 
       <main className="p-6">
-        <Sidebar />
-
+        <Sidebar
+          isLoggedIn={isLoggedIn}
+          onSuccessLogin={() => setIsLoggedIn(true)}
+          onLogout={() => setIsLoggedIn(false)}
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pl-[250px]">
           {Array.from({ length: 12 }).map((_, i) => (
             <div
@@ -38,17 +49,14 @@ export default function Home() {
         </div>
       </main>
 
-
-
       {showLoginPopup && (
         <LoginForm
-          onClose={() => setShowLoginPopup(false)}          // ❌ just closes the popup
+          onClose={() => setShowLoginPopup(false)}
           onSuccessLogin={() => {
-            setIsLoggedIn(true);                            // ✅ only log in on success
-            setShowLoginPopup(false);                       // ✅ close popup after success
+            setIsLoggedIn(true);
+            setShowLoginPopup(false);
           }}
         />
-
       )}
     </div>
   );

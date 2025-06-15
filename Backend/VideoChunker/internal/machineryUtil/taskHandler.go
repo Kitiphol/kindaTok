@@ -1,4 +1,4 @@
-package machineryutil
+package machineryUtil
 
 import (
     "context"

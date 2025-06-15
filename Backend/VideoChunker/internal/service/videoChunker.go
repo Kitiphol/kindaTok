@@ -91,7 +91,7 @@ func ChunkAndUpload(server *machinery.Server, bucket, objectKey string) error {
     }
 
     // Send a single task with all chunk keys (one whole batch)
-    err = machineryutil.SendTaskToConvertor(
+    err = machineryUtil.SendTaskToConvertor(
         server,
         "ConvertChunks",
         tasks.Arg{Type: "string", Value: bucket},

@@ -13,6 +13,8 @@ import (
 
 func CreateVideoForUser(userID uuid.UUID, req DTO.CreateVideoRequest) (string, error) {
     videoID := uuid.New()
+
+    // uuid_{filename}
     uniqueFilename := fmt.Sprintf("videos/%s_%s", videoID.String(), req.Filename)
 
     video := entity.Video{

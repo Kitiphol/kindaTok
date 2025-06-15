@@ -4,11 +4,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 RUN go build -o video-convertor ./cmd/main.go
-# RUN go build -o video-service main.go
 
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/video-convertor .
+COPY machinery.yaml .
 EXPOSE 8081
 
 CMD ["./video-convertor"]

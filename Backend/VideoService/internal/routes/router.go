@@ -1,51 +1,50 @@
 package routes
 
 import (
-    "github.com/gin-gonic/gin"
     "VideoService/internal/handler"
     "VideoService/internal/middleware"
+    "github.com/gin-contrib/cors"
+    "github.com/gin-gonic/gin"
+    "time"
 )
 
 // Setup creates the Gin router and routes
-// type RegisterHandler = handler.RegisterHandler
-
 func Setup() *gin.Engine {
     r := gin.Default()
 
-	videoHandler := handler.VideoHandler{}
+    // Configure CORS
+    r.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"http://localhost:3000"},
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+        ExposeHeaders:    []string{"Content-Length"},
+        AllowCredentials: true,
+        MaxAge:           12 * time.Hour,
+    }))
 
-	r.GET("/videos", videoHandler.GetAllVideos)
+    videoHandler := handler.VideoHandler{}
 
-    protected := r.Group("/", middleware.AuthMiddleware()) 
+    // Public: list all videos
+    r.GET("/videos", videoHandler.GetAllVideos)
+
+    // Protected routes require valid JWT
+    protected := r.Group("/", middleware.AuthMiddleware())
     {
+        // List videos belonging to the authenticated user
+        protected.GET("/videos/user", videoHandler.GetAllVideosForUser)
 
-        protected.GET("/videos/:videoID", videoHandler.GetVideoForAllUser)
+        // Get a single video (must belong to the authenticated user)
+        protected.GET("/videos/:videoID", videoHandler.GetVideoForUser)
 
-        user := protected.Group("/users") 
-        {
+        // Create a new video record & return presigned URL
+        protected.POST("/videos", videoHandler.CreateVideoForUser)
 
-                // Get all videos for a user
-            // by using :userID, you define it as a dynamic variable 
-            // that can be parsed in gin in the handler functions
-            user.GET("/:userID/videos", videoHandler.GetAllVideosForUser)
+        // Update metadata for a user's video
+        protected.PUT("/videos/:videoID", videoHandler.UpdateVideoForUser)
 
-            // Get a specific video for a user
-            user.GET("/:userID/videos/:videoID", videoHandler.GetVideoForUser)
-
-            // Create a new video for a user
-            user.POST("/:userID/videos", videoHandler.CreateVideoForUser)
-
-            // (Update a specific video for a user
-            user.PUT("/:userID/videos/:videoID", videoHandler.UpdateVideoForUser)
-
-            // Delete a specific video for a user
-            user.DELETE("/:userID/videos/:videoID", videoHandler.DeleteVideoForUser)
-
-        }
+        // Delete a user's video
+        protected.DELETE("/videos/:videoID", videoHandler.DeleteVideoForUser)
     }
-	
 
-
-    
     return r
 }

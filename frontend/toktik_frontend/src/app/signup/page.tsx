@@ -1,95 +1,101 @@
-"use client";
+'use client';
 
-// src/pages/Signup.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Signup() {
+export default function SignupPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-
-  //Function to handle signup logic
-  const handleSignup = async () => {
-    if (!username || !email || !password || !confirmPassword) {
-      alert('All fields are required.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert('Passwords do not match.');
-      return;
-    }
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     try {
-      const response = await fetch('/api/signup', {
+      const res = await fetch('http://localhost:8080/api/signup', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password })
+        mode: 'cors',
+        body: JSON.stringify({
+          username,
+          password,
+          confirm_password: confirmPassword,
+        }),
       });
 
-      if (response.ok) {
-        alert('Signup successful! You can now log in.');
-        // navigate('/');
-      } else {
-        const error = await response.json();
-        alert(error.message || 'Signup failed.');
+      const text = await res.text();
+
+      if (!res.ok) {
+        alert(text || 'Sign up failed');
+        return;
       }
-    } catch (err) {
-      console.error(err);
-      alert('Network error. Please try again.');
-    }
+
+      const data = JSON.parse(text);
+      const token = data.token;
+
+      if (!token) {
+        alert('No token returned from server');
+        return;
+      }
+
+      // ✅ Store JWT
+      localStorage.setItem('jwt', token);
+
+      alert('Signup successful!');
+
+      // ✅ Optional: redirect or reload to update state
+      router.push('/'); // or redirect to homepage/dashboard
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          alert('Signup failed: ' + err.message);
+        } else {
+          alert('Signup failed: Unknown error');
+        }
+      }
+
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
-      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded shadow">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        <input
-          className="w-full p-2 mb-3 border rounded"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          className="w-full p-2 mb-3 border rounded"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="w-full p-2 mb-3 border rounded"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          className="w-full p-2 mb-4 border rounded"
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <button
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-          onClick={handleSignup}
-        >
-          Sign Up
-        </button>
-
-        <button
-          className="mt-4 w-full text-sm text-gray-500 hover:underline"
-          onClick={() => router.push('/')}
-        >
-          Cancel
-        </button>
+        <form onSubmit={handleSignup}>
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-full p-2 mb-4 border rounded"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 mb-4 border rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            className="w-full p-2 mb-4 border rounded"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded"
+          >
+            Sign Up
+          </button>
+        </form>
       </div>
     </div>
   );
 }
+
+
+
+

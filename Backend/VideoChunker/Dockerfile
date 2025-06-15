@@ -9,6 +9,7 @@ RUN go build -o video-chunker ./cmd/main.go
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/video-chunker .
+COPY machinery.yaml .
 EXPOSE 8081
 
 CMD ["./video-chunker"]

@@ -2,17 +2,16 @@ package handler
 
 import (
     "net/http"
-
     "github.com/gin-gonic/gin"
     "github.com/google/uuid"
-    "VideoService/internal/service"
     "VideoService/internal/DTO"
     "VideoService/internal/middleware"
+    "VideoService/internal/service"
 )
 
 type VideoHandler struct{}
 
-// GetAllVideos is public, no auth required
+// GetAllVideos returns all videos in the system (public)
 func (h *VideoHandler) GetAllVideos(c *gin.Context) {
     videos, err := service.GetAllVideos()
     if err != nil {
@@ -22,19 +21,11 @@ func (h *VideoHandler) GetAllVideos(c *gin.Context) {
     c.JSON(http.StatusOK, videos)
 }
 
-// Helper to extract userID from context and abort on error
-func getUserID(c *gin.Context) (uuid.UUID, bool) {
-    id, err := middleware.GetUserIDFromContext(c)
+// GetAllVideosForUser returns videos for the authenticated user
+func (h *VideoHandler) GetAllVideosForUser(c *gin.Context) {
+    userID, err := middleware.GetUserIDFromContext(c)
     if err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-        return uuid.Nil, false
-    }
-    return id, true
-}
-
-func (h *VideoHandler) GetAllVideosForUser(c *gin.Context) {
-    userID, ok := getUserID(c)
-    if !ok {
         return
     }
 
@@ -46,14 +37,17 @@ func (h *VideoHandler) GetAllVideosForUser(c *gin.Context) {
     c.JSON(http.StatusOK, videos)
 }
 
+// GetVideoForUser returns a presigned GET URL for a user's video
 func (h *VideoHandler) GetVideoForUser(c *gin.Context) {
-    userID, ok := getUserID(c)
-    if !ok {
+    userID, err := middleware.GetUserIDFromContext(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
         return
     }
+
     videoIDStr := c.Param("videoID")
-    videoID, err := uuid.Parse(videoIDStr)
-    if err != nil {
+    videoID, parseErr := uuid.Parse(videoIDStr)
+    if parseErr != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "invalid video ID"})
         return
     }
@@ -63,80 +57,77 @@ func (h *VideoHandler) GetVideoForUser(c *gin.Context) {
         c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, presignURL)
+    c.JSON(http.StatusOK, gin.H{"presignedURL": presignURL})
 }
 
-func (h *VideoHandler) GetVideoForAllUser(c *gin.Context) {
-    videoIDStr := c.Param("videoID")
-    videoID, err := uuid.Parse(videoIDStr)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid video ID"})
-        return
-    }
-
-    videoURL, err := service.GetVideoForAllUser(videoID)
-    if err != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-        return
-    }
-    c.JSON(http.StatusOK, videoURL)
-}
-
+// CreateVideoForUser issues a presigned PUT URL for a new user video
 func (h *VideoHandler) CreateVideoForUser(c *gin.Context) {
-    userID, ok := getUserID(c)
-    if !ok {
+    userID, err := middleware.GetUserIDFromContext(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
         return
     }
+
     var req DTO.CreateVideoRequest
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    if bindErr := c.ShouldBindJSON(&req); bindErr != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": bindErr.Error()})
         return
     }
-    presignedURL, err := service.CreateVideoForUser(userID, req)
+
+    presignURL, err := service.CreateVideoForUser(userID, req)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusCreated, gin.H{"message": "Video created successfully", "presignedURL": presignedURL})
+    c.JSON(http.StatusCreated, gin.H{"message": "video record created", "presignedURL": presignURL})
 }
 
+// UpdateVideoForUser updates metadata for an existing video
 func (h *VideoHandler) UpdateVideoForUser(c *gin.Context) {
-    userID, ok := getUserID(c)
-    if !ok {
+    userID, err := middleware.GetUserIDFromContext(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
         return
     }
+
     videoIDStr := c.Param("videoID")
-    videoID, err := uuid.Parse(videoIDStr)
-    if err != nil {
+    videoID, parseErr := uuid.Parse(videoIDStr)
+    if parseErr != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "invalid video ID"})
         return
     }
+
     var req DTO.UpdateVideoRequest
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    if bindErr := c.ShouldBindJSON(&req); bindErr != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": bindErr.Error()})
         return
     }
+
     if err := service.UpdateVideoForUser(userID, videoID, req); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"message": "Video updated successfully"})
+    c.JSON(http.StatusOK, gin.H{"message": "video updated"})
 }
 
+// DeleteVideoForUser deletes a user's video
 func (h *VideoHandler) DeleteVideoForUser(c *gin.Context) {
-    userID, ok := getUserID(c)
-    if !ok {
+    userID, err := middleware.GetUserIDFromContext(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
         return
     }
+
     videoIDStr := c.Param("videoID")
-    videoID, err := uuid.Parse(videoIDStr)
-    if err != nil {
+    videoID, parseErr := uuid.Parse(videoIDStr)
+    if parseErr != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "invalid video ID"})
         return
     }
+
     if err := service.DeleteVideoForUser(userID, videoID); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"message": "Video deleted"})
+    c.JSON(http.StatusOK, gin.H{"message": "video deleted"})
 }

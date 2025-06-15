@@ -3,7 +3,8 @@ package main
 import (
     "fmt"
     "os"
-    "ThumbnailCreator/internal/machineryutil"
+
+	"VideoChuncker/internal/machineryUtil"
 )
 
 func main() {
