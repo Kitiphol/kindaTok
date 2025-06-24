@@ -15,6 +15,7 @@ import (
 
 // UploadFile uploads the local file to the specified bucket and object key in R2.
 func UploadFile(bucketName, objectKey, localFilePath string) error {
+    log.Printf("[DEBUG] UploadFile: bucket=%s, key=%s, localFile=%s", bucketName, objectKey, localFilePath)
     cfg, err := config.LoadDefaultConfig(context.TODO(),
         config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(accessKeyId, accessKeySecret, "")),
         config.WithRegion("auto"),
@@ -38,11 +39,12 @@ func UploadFile(bucketName, objectKey, localFilePath string) error {
     _, err = client.PutObject(context.TODO(), &s3.PutObjectInput{
        Bucket:      aws.String(bucketName),
         Key:         aws.String(objectKey),
+        Body:       file,
     })
     if err != nil {
         return fmt.Errorf("failed to upload file to R2: %w", err)
     }
 
-    log.Printf("Uploaded file %s to bucket %s with key %s\n", localFilePath, bucketName, objectKey)
+    log.Printf("[DEBUG] Uploaded file %s to bucket %s with key %s", localFilePath, bucketName, objectKey)
     return nil
 }

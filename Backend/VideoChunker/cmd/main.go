@@ -4,7 +4,8 @@ import (
     "fmt"
     "os"
 
-	"VideoChuncker/internal/machineryUtil"
+	"VideoChuncker/internal/handler"
+    "VideoChuncker/internal/machineryUtil"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
     }
 
     // Use the StartWorker helper to register and launch the worker
-    if err := machineryUtil.StartWorker(server); err != nil {
+    if err := handler.StartWorker(server); err != nil {
         fmt.Printf("Worker failed: %v\n", err)
         os.Exit(1)
     }

@@ -27,13 +27,13 @@ export default function UpdateUserForm({ onClose, jwtToken }: UpdateUserFormProp
     }
 
     try {
-      const response = await fetch('http://localhost:8080/updateUser', {
-        method: 'PUT',
+      const response = await fetch('http://localhost:8081/api/updateUser', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, confirm_password: confirmPassword }),
       });
 
       if (!response.ok) {
@@ -41,6 +41,7 @@ export default function UpdateUserForm({ onClose, jwtToken }: UpdateUserFormProp
         throw new Error(errorText);
       }
 
+    
       const result = await response.text();
       alert(`Update successful: ${result}`);
       onClose();

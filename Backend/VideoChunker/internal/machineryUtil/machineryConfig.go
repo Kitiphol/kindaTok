@@ -81,6 +81,7 @@ func GetMachineryConfig() *config.Config {
 
 // buildBroker returns a RabbitMQ (AMQP) broker implementation.
 func buildBroker(cfg *config.Config) (brokersiface.Broker, error) {
+	
 	return amqp.New(cfg), nil
 }
 

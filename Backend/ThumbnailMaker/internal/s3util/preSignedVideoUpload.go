@@ -29,6 +29,7 @@ func GeneratePresignedPutURL(bucketName, objectKey string , expires time.Duratio
     params := &s3.PutObjectInput{
         Bucket:      aws.String(bucketName),
         Key:         aws.String(objectKey),
+        ContentType:   aws.String("image/webp"),
     }
     presignedReq, err := presignClient.PresignPutObject(context.TODO(), params, s3.WithPresignExpires(expires))
     if err != nil {

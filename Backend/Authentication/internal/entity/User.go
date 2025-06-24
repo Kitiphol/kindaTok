@@ -14,7 +14,7 @@ type User struct {
     Email        string    `gorm:"uniqueIndex;size:100;not null" json:"email"`
 
     Videos   []Video   `gorm:"foreignKey:UserID" json:"videos,omitempty"`    // One-to-many: User has many Videos
-    Comments []Comment `gorm:"foreignKey:UserID" json:"comments,omitempty"`  // One-to-many: User has many Comments
+    // Comments []Comment `gorm:"foreignKey:UserID" json:"comments,omitempty"`  // One-to-many: User has many Comments
 }
 
 // Auto-generate UUID before creating

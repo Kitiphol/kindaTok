@@ -20,12 +20,15 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    token, err := service.Register(req)
+    token, username, err := service.Register(req)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"token": token})
+    c.JSON(http.StatusOK, gin.H{
+        "token":    token,
+        "username": username,
+    })
 }
 
 // Login handles login
@@ -35,13 +38,17 @@ func (h *RegisterHandler) Login(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    token, err := service.Login(req)
+    token, username, err := service.Login(req)
     if err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"token": token})
+    c.JSON(http.StatusOK, gin.H{
+        "token":    token,
+        "username": username,
+    })
 }
+
 
 
 func Profile(c *gin.Context) {

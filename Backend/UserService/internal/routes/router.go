@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
+    "UserService/internal/middleware"
     
 )
 
@@ -26,6 +27,8 @@ func Setup() *gin.Engine {
     }))
 
     auth := r.Group("/api")
+    auth.Use(middleware.AuthMiddleware())
+    
     reg := RegisterHandler{}
     auth.POST("/updateUser", reg.Handle)
 

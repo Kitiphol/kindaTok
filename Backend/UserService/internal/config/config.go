@@ -20,6 +20,7 @@ func Load() Config {
     port := os.Getenv("POSTGRES_PORT")
     db   := os.Getenv("POSTGRES_DB")
     ssl  := os.Getenv("SSL_MODE")
+    jwt := os.Getenv("JWT_SECRET")
     if user == "" || pass == "" || host == "" || port == "" || db == "" {
         log.Fatal("Database credentials must be set")
     }
@@ -45,6 +46,7 @@ func Load() Config {
 
     return Config{
         DatabaseURL: databaseURL,
+        JWTSecret:   jwt,
         Port:        httpPort,
     }
 }

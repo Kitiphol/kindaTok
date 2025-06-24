@@ -12,6 +12,8 @@ COPY --from=builder /app/thumbnail-maker .
 
 COPY machinery.yaml .
 
+RUN apk add --no-cache ffmpeg curl
+
 EXPOSE 8081
 
 

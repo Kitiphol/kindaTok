@@ -4,6 +4,7 @@ import (
     "context"
     "fmt"
     "time"
+    "log"
 
     "github.com/aws/aws-sdk-go-v2/aws"
     "github.com/aws/aws-sdk-go-v2/config"
@@ -13,6 +14,7 @@ import (
 
 
 func GeneratePresignedGetURL(bucketName, objectKey string, expires time.Duration) (string, error) {
+    log.Printf("[DEBUG] GeneratePresignedGetURL: bucket=%s, key=%s", bucketName, objectKey);
     cfg, err := config.LoadDefaultConfig(context.TODO(),
         config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(accessKeyId, accessKeySecret, "")),
         config.WithRegion("auto"),
@@ -34,5 +36,6 @@ func GeneratePresignedGetURL(bucketName, objectKey string, expires time.Duration
     if err != nil {
         return "", fmt.Errorf("failed to presign GET URL: %w", err)
     }
+    log.Printf("[DEBUG] Presigned GET URL: %s", presignedReq.URL)
     return presignedReq.URL, nil
 }

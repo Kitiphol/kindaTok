@@ -12,6 +12,6 @@ func StartWorker(server *machinery.Server) error {
     if err := server.RegisterTasks(tasks); err != nil {
         return err
     }
-    worker := server.NewWorker("thumnail-convertor-worker", 1)
+    worker := server.NewWorker("thumbnail-convertor-worker", 1) 
     return worker.Launch()
 }

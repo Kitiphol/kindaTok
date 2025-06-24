@@ -10,6 +10,11 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/video-chunker .
 COPY machinery.yaml .
+
+
+RUN apk add --no-cache ffmpeg curl
+
+
 EXPOSE 8081
 
 CMD ["./video-chunker"]

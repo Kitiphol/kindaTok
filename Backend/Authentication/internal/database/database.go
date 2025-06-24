@@ -20,7 +20,7 @@ func InitDB() {
     }
 
     // Auto-migrate tables
-    db.AutoMigrate(&entity.User{}, &entity.Video{}, &entity.Comment{})
+    db.AutoMigrate(&entity.User{}, &entity.Video{}, &entity.Comment{}, &entity.Like{})
 
     if err != nil {
         log.Fatal("Failed to migrate database:", err)

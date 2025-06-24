@@ -34,10 +34,19 @@ func UploadFile(bucketName, objectKey, localFilePath string) error {
     }
     defer file.Close()
 
+    
+    stat, err := file.Stat()
+    if err != nil {
+        return fmt.Errorf("failed to stat local file: %w", err)
+    }
+
     // Upload to R2
     _, err = client.PutObject(context.TODO(), &s3.PutObjectInput{
        Bucket:      aws.String(bucketName),
         Key:         aws.String(objectKey),
+        Body:          file,                    // ✅ This uploads the actual file
+        ContentLength: aws.Int64(stat.Size()),             // ✅ Required for some S3-compatible APIs like R2
+        ContentType:   aws.String("image/jpeg"),
     })
     if err != nil {
         return fmt.Errorf("failed to upload file to R2: %w", err)
