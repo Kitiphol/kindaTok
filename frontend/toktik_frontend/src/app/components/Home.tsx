@@ -1,181 +1,20 @@
-// 'use client';
+"use client";
 
-// import { useState, useEffect } from 'react';
-// import LoginForm from './Auth/LoginForm';
-// import Sidebar from './Util/Sidebar';
-
-// export default function Home() {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [showLoginPopup, setShowLoginPopup] = useState(false);
-
-//   // Check for JWT token in localStorage on page load
-//   useEffect(() => {
-//     const token = localStorage.getItem('jwtToken');
-//     if (token) {
-//       setIsLoggedIn(true);
-//     }
-//   }, []);
-
-//   const handleVideoClick = (videoNumber: number) => {
-//     if (!isLoggedIn) {
-//       setShowLoginPopup(true);
-//     } else {
-//       alert(`Now playing Video ${videoNumber}`);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100">
-//       <header className="bg-white shadow p-4">
-//         <h1 className="text-3xl font-bold text-center text-gray-800">TokTik</h1>
-//       </header>
-
-//       <main className="p-6">
-//         <Sidebar
-//           isLoggedIn={isLoggedIn}
-//           onSuccessLogin={() => setIsLoggedIn(true)}
-//           onLogout={() => setIsLoggedIn(false)}
-//         />
-//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pl-[250px]">
-//           {Array.from({ length: 12 }).map((_, i) => (
-//             <div
-//               key={i}
-//               className="bg-gray-300 h-48 rounded-lg shadow-md flex items-center justify-center text-lg font-semibold text-gray-700 hover:bg-gray-400 cursor-pointer transition"
-//               onClick={() => handleVideoClick(i + 1)}
-//             >
-//               🎬 Video {i + 1}
-//             </div>
-//           ))}
-//         </div>
-//       </main>
-
-//       {showLoginPopup && (
-//         <LoginForm
-//           onClose={() => setShowLoginPopup(false)}
-//           onSuccessLogin={() => {
-//             setIsLoggedIn(true);
-//             setShowLoginPopup(false);
-//           }}
-//         />
-//       )}
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-// 'use client';
-
-// import { useState, useEffect } from 'react';
-// import LoginForm from './Auth/LoginForm';
-// import Sidebar from './Util/Sidebar';
-
-// export default function Home() {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [showLoginPopup, setShowLoginPopup] = useState(false);
-//   const [jwtToken, setJwtToken] = useState<string | null>(null);
-//   const [videos, setVideos] = useState<VideoThumbInfo[]>([]);
-//   const [loading, setLoading] = useState(true);
-
-  
-
-
-//   useEffect(() => {
-//     const token = localStorage.getItem('jwtToken');
-//     if (token) {
-//       setIsLoggedIn(true);
-//       setJwtToken(token);
-//     }
-//   }, []);
-
-//   const handleVideoClick = (videoNumber: number) => {
-//     if (!isLoggedIn) {
-//       setShowLoginPopup(true);
-//     } else {
-//       alert(`Now playing Video ${videoNumber}`);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100">
-//       <header className="bg-white shadow p-4">
-//         <h1 className="text-3xl font-bold text-center text-gray-800">TokTik</h1>
-//       </header>
-
-//       <main className="p-6">
-//         <Sidebar
-//           isLoggedIn={isLoggedIn}
-//           onSuccessLogin={(token: string) => {
-//             setIsLoggedIn(true);
-//             setJwtToken(token);
-//           }}
-//           onLogout={() => {
-//             setIsLoggedIn(false);
-//             setJwtToken(null);
-//             localStorage.removeItem('jwtToken');
-//             localStorage.removeItem('username');
-//           }}
-//         />
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pl-[250px]">
-//           {Array.from({ length: 12 }).map((_, i) => (
-//             <div
-//               key={i}
-//               className="bg-gray-300 h-48 rounded-lg shadow-md flex items-center justify-center text-lg font-semibold text-gray-700 hover:bg-gray-400 cursor-pointer transition"
-//               onClick={() => handleVideoClick(i + 1)}
-//             >
-//               🎬 Video {i + 1}
-//             </div>
-//           ))}
-//         </div>
-//       </main>
-
-//       {showLoginPopup && (
-//         <LoginForm
-//           onClose={() => setShowLoginPopup(false)}
-//           onSuccessLogin={(token: string) => {
-//             setIsLoggedIn(true);
-//             setJwtToken(token);
-//             setShowLoginPopup(false);
-//           }}
-//         />
-//       )}
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-'use client';
-
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LoginForm from './Auth/LoginForm';
 import Sidebar from './Util/Sidebar';
-import { ImEye} from 'react-icons/im';
-import { BsFillHandThumbsUpFill } from "react-icons/bs";
+import { ImEye, ImArrowLeft2, ImArrowRight2 } from 'react-icons/im';
+import { BsFillHandThumbsUpFill } from 'react-icons/bs';
 import Hls from 'hls.js';
 
-type VideoThumbInfo = {
+export type VideoThumbInfo = {
   videoID: string;
   thumbnailURL: string;
-  title: string; // camelCase!
+  title: string;
   totalLikeCount: number;
   totalViewCount: number;
+  hasLiked: boolean;
 };
-
 
 type VideoThumbInfoBackend = {
   videoID: string;
@@ -185,12 +24,7 @@ type VideoThumbInfoBackend = {
   TotalViewCount: number;
 };
 
-// ...existing code...
-type CommentDTO = {
-  id: string;
-  content: string;
-  username: string;
-};
+type CommentDTO = { id: string; content: string; username: string };
 
 type VideoDetailResponse = {
   playlist: string;
@@ -199,10 +33,6 @@ type VideoDetailResponse = {
   totalLikeCount: number;
   comments: CommentDTO[];
 };
-// ...existing code...
-
-
-
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -210,32 +40,48 @@ export default function Home() {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [videos, setVideos] = useState<VideoThumbInfo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [playlist, setPlaylist] = useState<string | null>(null);
   const [playlistLoading, setPlaylistLoading] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoDetailResponse | null>(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
+  const [modalHasLiked, setModalHasLiked] = useState(false);
 
-  // Fetch videos function
-  const fetchVideos = async () => {
+  const fetchVideos = async (token: string | null) => {
     setLoading(true);
     try {
       const res = await fetch('http://localhost:8090/api/videos');
-      if (res.ok) {
-        const data: VideoThumbInfoBackend[] = await res.json();
-        console.log("Fetched videos from backend:", data); // <--- Add this
-        const mapped: VideoThumbInfo[] = data.map((v) => ({
-          videoID: v.videoID,
-          thumbnailURL: v.thumbnailURL,
-          title: v.title,
-          totalLikeCount: v.TotalLikeCount ?? 0,
-          totalViewCount: v.TotalViewCount ?? 0,
-        }));
-        setVideos(mapped);
-        console.log("Mapped videos for display:", mapped); // <--- And this
-      }
+      const list: VideoThumbInfoBackend[] = res.ok ? await res.json() : [];
+      const sorted = [...list].sort((a, b) => a.videoID.localeCompare(b.videoID));
+      const thumbs = await Promise.all(
+        sorted.map(async (v) => {
+          let likes = v.TotalLikeCount;
+          let hasLiked = false;
+          if (token) {
+            const statusRes = await fetch(
+              `http://localhost:8092/api/likes/videos/${v.videoID}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (statusRes.ok) {
+              const data = await statusRes.json();
+              likes = data.likes;
+              hasLiked = data.hasLiked;
+            }
+          }
+          return {
+            videoID: v.videoID,
+            thumbnailURL: v.thumbnailURL,
+            title: v.title,
+            totalLikeCount: likes,
+            totalViewCount: v.TotalViewCount,
+            hasLiked,
+          };
+        })
+      );
+      setVideos(thumbs);
     } catch (err) {
-      console.error('Failed to fetch videos:', err);
+      console.error('fetchVideos error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -243,221 +89,180 @@ export default function Home() {
     if (token) {
       setIsLoggedIn(true);
       setJwtToken(token);
+      fetchVideos(token);
+    } else {
+      fetchVideos(null);
     }
-    fetchVideos();
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!showLoginPopup) {
-        fetchVideos();
+    const iv = setInterval(() => fetchVideos(jwtToken), 10000);
+    return () => clearInterval(iv);
+  }, [jwtToken]);
+
+  const toggleLike = async (videoID: string, idx: number) => {
+    if (!jwtToken) {
+      setShowLoginPopup(true);
+      return;
+    }
+    try {
+      const currentlyLiked = videos[idx].hasLiked;
+      // Toggle on plural 'likes' endpoint per backend
+      const res = await fetch(
+        `http://localhost:8092/api/likes/videos/${videoID}`,
+        {
+          method: currentlyLiked ? 'DELETE' : 'POST',
+          headers: { Authorization: `Bearer ${jwtToken}` },
+        }
+      );
+      if (!res.ok) throw new Error('toggle failed');
+      // Expect response { likes, hasLiked }
+      const { likes, hasLiked } = await res.json();
+      setVideos((prev) =>
+        prev.map((v, i) =>
+          i === idx ? { ...v, totalLikeCount: likes, hasLiked } : v
+        )
+      );
+      if (selectedVideoIndex === idx && selectedVideo) {
+        setSelectedVideo({ ...selectedVideo, totalLikeCount: likes });
+        setModalHasLiked(hasLiked);
       }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [showLoginPopup]);
+    } catch (err) {
+      console.error('toggleLike error:', err);
+      alert('Could not update like');
+    }
+  };
 
-
-  function HlsPlayer({ playlistUrl }: { playlistUrl: string }) {
-    const videoRef = useRef<HTMLVideoElement>(null);
-
+  const HlsPlayer = ({ playlistUrl }: { playlistUrl: string }) => {
+    const ref = useRef<HTMLVideoElement>(null);
     useEffect(() => {
-      if (videoRef.current && Hls.isSupported()) {
+      if (ref.current && Hls.isSupported()) {
         const hls = new Hls();
         hls.loadSource(playlistUrl);
-        hls.attachMedia(videoRef.current);
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          console.error("HLS.js error:", data);
-        });
-        return () => {
-          hls.destroy();
-        };
-      } else if (videoRef.current) {
-        videoRef.current.src = playlistUrl;
+        hls.attachMedia(ref.current);
+        return () => hls.destroy();
+      } else if (ref.current) {
+        ref.current.src = playlistUrl;
       }
     }, [playlistUrl]);
+    return <video ref={ref} controls autoPlay className="w-full h-80 rounded bg-black" />;
+  };
 
-    return (
-      <video ref={videoRef} controls autoPlay className="w-full h-80 rounded bg-black" />
-    );
-  }
-
-
-  // ...existing code...
-const handleVideoClick = async (videoID: string) => {
-  if (!isLoggedIn) {
-    setShowLoginPopup(true);
-    return;
-  }
-  setPlaylistLoading(true);
-  setSelectedVideo(null);
-  try {
-    const res = await fetch(`http://localhost:8090/api/videos/${videoID}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
-    if (res.ok) {
-      const data: VideoDetailResponse = await res.json();
-      console.log("Fetched video detail:", data); 
-      setSelectedVideo(data);
-    } else {
-      alert("Failed to load video.");
+  const handleVideoClick = async (videoID: string, idx: number) => {
+    if (!jwtToken) { setShowLoginPopup(true); return; }
+    setPlaylistLoading(true);
+    setSelectedVideo(null);
+    setSelectedVideoIndex(idx);
+    try {
+      const [vRes, lRes, vwRes, cRes] = await Promise.all([
+        fetch(`http://localhost:8090/api/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+      ]);
+      if (!vRes.ok) throw new Error();
+      const vd = await vRes.json();
+      const ld = lRes.ok ? await lRes.json() : { likes: 0, hasLiked: false };
+      const vw = vwRes.ok ? await vwRes.json() : { views: 0 };
+      const cm = cRes.ok ? await cRes.json() : { comments: [] };
+      setSelectedVideo({ playlist: vd.playlist, title: vd.title, totalViewCount: vw.views, totalLikeCount: ld.likes, comments: cm.comments });
+      setModalHasLiked(ld.hasLiked);
+    } catch (err) {
+      console.error('handleVideoClick error:', err);
+      alert('Failed to load video');
+    } finally {
+      setPlaylistLoading(false);
     }
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error('Error fetching video:', err.message);
-    } else {
-      console.error('Error fetching video:', err);
-    }
-  }
-  setPlaylistLoading(false);
-};
-// ...existing code...
-
-
-
-
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow p-4">
-        <h1 className="text-3xl font-bold text-center text-gray-800">TokTik</h1>
+        <h1 className="text-3xl font-bold text-center text-black">TokTik</h1>
       </header>
-
-      <main className="p-6">
+      <main className="p-6 flex">
         <Sidebar
           isLoggedIn={isLoggedIn}
-          onSuccessLogin={(token: string) => {
-            setIsLoggedIn(true);
-            setJwtToken(token);
-          }}
-          onLogout={() => {
-            setIsLoggedIn(false);
-            setJwtToken(null);
-            localStorage.removeItem('jwtToken');
-            localStorage.removeItem('username');
-          }}
+          onSuccessLogin={(token) => { localStorage.setItem('jwtToken', token); setJwtToken(token); setIsLoggedIn(true); fetchVideos(token); }}
+          onLogout={() => { localStorage.removeItem('jwtToken'); setJwtToken(null); setIsLoggedIn(false); fetchVideos(null); }}
         />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pl-[250px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pl-[250px] w-full">
           {loading ? (
             <div>Loading...</div>
           ) : (
-            videos.map((video) => (
+            videos.map((v, i) => (
               <div
-                key={video.videoID}
-                className="bg-gray-300 h-56 rounded-lg shadow-md flex flex-col items-center justify-between text-lg font-semibold text-gray-700 hover:bg-gray-400 cursor-pointer transition p-2"
-                onClick={() => handleVideoClick(video.videoID)}
+                key={v.videoID}
+                onClick={() => handleVideoClick(v.videoID, i)}
+                className="bg-gray-300 h-56 rounded-lg shadow-md flex flex-col justify-between p-2 cursor-pointer hover:bg-gray-400"
               >
                 <img
-                  src={video.thumbnailURL}
-                  alt={`Thumbnail for video ${video.title}`}
-                  className="w-full h-32 object-cover rounded-t-lg"
+                  src={v.thumbnailURL}
+                  alt={v.title}
+                  className="w-full h-32 object-cover rounded-t"
                 />
-                <div className="w-full flex flex-col items-start mt-2 px-2">
-                  <span className="font-bold text-base truncate w-full text-center">{video.title}</span>
-                  <div className="flex items-center gap-4 mt-1 text-sm">
-                    <span title="Likes" className="flex items-center gap-1 ">
-                      <span className="inline-block align-middle"><BsFillHandThumbsUpFill size={18} /></span> {video.totalLikeCount}
-                    </span>
-                    <span title="Views" className="flex items-center gap-1">
-                      <span className="inline-block align-middle"><ImEye size={18} /></span> {video.totalViewCount}
-                    </span>
-                  </div>
+                <div className="text-lg font-bold text-gray-800 truncate px-1 text-center">
+                  {v.title}
+                </div>
+                <div className="flex gap-4 items-center justify-center text-black">
+                  <span
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      toggleLike(v.videoID, i);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <BsFillHandThumbsUpFill
+                      size={22}
+                      color={v.hasLiked ? '#dc2626' : '#6b7280'}
+                    />
+                  </span>
+                  <span>{v.totalLikeCount}</span>
+                  <ImEye size={18} />
+                  <span className="text-black dark:text-black">{v.totalViewCount}</span>
+
                 </div>
               </div>
             ))
           )}
         </div>
+
       </main>
 
-      {showLoginPopup && (
-        <LoginForm
-          onClose={() => setShowLoginPopup(false)}
-          onSuccessLogin={(token: string) => {
-            setIsLoggedIn(true);
-            setJwtToken(token);
-            setShowLoginPopup(false);
-          }}
-        />
-      )}
+      {showLoginPopup && <LoginForm onClose={() => setShowLoginPopup(false)} onSuccessLogin={(token) => { localStorage.setItem('jwtToken', token); setJwtToken(token); setIsLoggedIn(true); setShowLoginPopup(false); fetchVideos(token); }} />}
 
+      {playlistLoading && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"><div className="bg-white p-6 rounded">Loading...</div></div>}
 
-      
-      {playlistLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded shadow text-center">
-            Loading video...
-          </div>
-        </div>
-      )}
-      {playlist && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow max-w-lg w-full">
-            <h2 className="text-xl font-bold mb-4">Playlist.m3u8</h2>
-            <pre className="overflow-x-auto text-xs bg-gray-100 p-2 rounded">{playlist}</pre>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-              onClick={() => setPlaylist(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-
-      {selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white rounded shadow max-w-4xl w-full flex flex-col md:flex-row p-4 relative">
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl"
-              onClick={() => setSelectedVideo(null)}
-            >
-              &times;
-            </button>
-
-            {/* Left: Video Player */}
-            <div className="md:w-2/3 w-full flex items-center justify-center">
-              <HlsPlayer playlistUrl={selectedVideo.playlist} />
-            </div>
-            
-            {/* Right: Info */}
-            <div className="md:w-1/3 w-full flex flex-col justify-between p-4">
+      {selectedVideo && selectedVideoIndex !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+          <div className="bg-white rounded shadow-lg w-11/12 max-w-4xl p-4 relative flex flex-col md:flex-row">
+            {selectedVideoIndex > 0 && <button className="absolute left-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black" onClick={() => handleVideoClick(videos[selectedVideoIndex-1].videoID, selectedVideoIndex-1)}><ImArrowLeft2 /></button>}
+            {selectedVideoIndex < videos.length-1 && <button className="absolute right-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black" onClick={() => handleVideoClick(videos[selectedVideoIndex+1].videoID, selectedVideoIndex+1)}><ImArrowRight2 /></button>}
+            <button className="absolute top-2 right-2 text-2xl text-gray-600 hover:text-black" onClick={() => { setSelectedVideo(null); setSelectedVideoIndex(null); }}>&times;</button>
+            <div className="md:w-2/3 w-full flex items-center justify-center"><HlsPlayer playlistUrl={selectedVideo.playlist} /></div>
+            <div className="md:w-1/3 w-full p-4 flex flex-col justify-between text-black">
+              <h2 className="text-xl font-bold truncate align-middle">{selectedVideo.title}</h2>
+              <div className="flex gap-4 items-center mb-4 text-black">
+                <span className="cursor-pointer" onClick={() => toggleLike(videos[selectedVideoIndex].videoID, selectedVideoIndex)}>
+                  <BsFillHandThumbsUpFill size={22} color={modalHasLiked ? '#dc2626' : '#6b7280'} />
+                </span>
+                <span>{selectedVideo.totalLikeCount}</span>
+                <ImEye size={18} /> <span>{selectedVideo.totalViewCount}</span>
+              </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">{selectedVideo.title}</h2>
-                <div className="flex gap-4 mb-4 text-gray-700">
-                  <span className="flex items-center gap-1">
-                    <BsFillHandThumbsUpFill size={18} /> {selectedVideo.totalLikeCount}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <ImEye size={18} /> {selectedVideo.totalViewCount}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-4">
-                <h3 className="font-semibold mb-2">Comments</h3>
+                <h3 className="font-semibold">Comments</h3>
                 <div className="max-h-48 overflow-y-auto space-y-2">
-                  {(selectedVideo.comments ?? []).length === 0 ? (
-                    <div className="text-gray-400">No comments yet.</div>
-                  ) : (
-                    (selectedVideo.comments ?? []).map((c) => (
-                      <div key={c.id} className="border-b pb-1">
-                        <span className="font-bold">{c.username}:</span> {c.content}
-                      </div>
-                    ))
-                  )}
+                  {selectedVideo.comments.length ? selectedVideo.comments.map((c) => <div key={c.id} className="border-b pb-1"><span className="font-bold">{c.username}:</span> {c.content}</div>) : <div className="text-gray-400">No comments yet.</div>}
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
-
-
-
-
     </div>
   );
 }
+
+
+
+
