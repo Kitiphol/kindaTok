@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: thumbnailmaker
+  name: thumbnail-maker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: thumbnailmaker
+      app: thumbnail-maker
   template:
     metadata:
       labels:
-        app: thumbnailmaker
+        app: thumbnail-maker
     spec:
       containers:
-        - name: thumbnailmaker
-          image: your-docker-repo/thumbnailmaker:latest
+        - name: thumbnail-maker
+          image: ghcr.io/kitiphol/thumbnailmaker:latest
           ports:
             - containerPort: 8080
           volumeMounts:
             - name: machinery-config
-              mountPath: /root/machinery.yaml
+              mountPath: ./machinery.yaml
               subPath: machinery.yaml
       volumes:
         - name: machinery-config
@@ -29,10 +29,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: thumbnailmaker
+  name: thumbnail-maker
 spec:
   selector:
-    app: thumbnailmaker
+    app: thumbnail-maker
   ports:
     - protocol: TCP
       port: 8080

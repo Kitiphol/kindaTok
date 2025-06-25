@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: videoconvertor
+  name: video-convertor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: videoconvertor
+      app: video-convertor
   template:
     metadata:
       labels:
-        app: videoconvertor
+        app: video-convertor
     spec:
       containers:
-        - name: videoconvertor
-          image: your-docker-repo/videoconvertor:latest
+        - name: video-convertor
+          image: ghcr.io/kitiphol/videoconvertor:latest
           ports:
             - containerPort: 8080
           volumeMounts:
@@ -29,10 +29,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: videoconvertor
+  name: video-convertor
 spec:
   selector:
-    app: videoconvertor
+    app: video-convertor
   ports:
     - protocol: TCP
       port: 8080

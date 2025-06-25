@@ -1,33 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: toktik-frontend
+  name: frontend-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: toktik-frontend
+      app: frontend-service
   template:
     metadata:
       labels:
-        app: toktik-frontend
+        app: frontend-service
     spec:
       containers:
-        - name: toktik-frontend
-          image: your-docker-repo/toktik-frontend:latest
+        - name: frontend-service
+          image: ./frontend/toktik-frontend:latest
           ports:
             - containerPort: 3000
-          env:
-            - name: NODE_ENV
-              value: "production"
+          # env:
+          #   - name: NODE_ENV
+          #     value: "production"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: toktik-frontend
+  name: frontend-service
 spec:
   selector:
-    app: toktik-frontend
+    app: frontend-service
   ports:
     - protocol: TCP
       port: 80

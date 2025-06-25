@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: video-service
-          image: your-docker-repo/video-service:latest
+          image: ghcr.io/kitiphol/videoservice:latest
           ports:
             - containerPort: 8081
           volumeMounts:
@@ -35,6 +35,6 @@ spec:
     app: video-service
   ports:
     - protocol: TCP
-      port: 8081
+      port: 8080
       targetPort: 8081
   type: ClusterIP

@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sticky-session
+  namespace: default  # or your custom namespace
+spec:
+  loadBalancer:
+    sticky:
+      cookie:
+        name: sticky-cookie
+        httpOnly: true
+        secure: false

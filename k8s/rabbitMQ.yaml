@@ -26,23 +26,23 @@ spec:
               export RABBITMQ_NODENAME="rabbit@$MY_POD_NAME.rabbitmq-headless.$NAMESPACE.svc.cluster.local"
               exec docker-entrypoint.sh rabbitmq-server
           ports:
-            - name: amqp
-              containerPort: 5672
-            - name: management
-              containerPort: 15672
+            # - name: amqp
+            #   containerPort: 5672
+            # - name: management
+            #   containerPort: 15672
             - name: epmd
               containerPort: 4369
             - name: cluster
               containerPort: 25672
           env:
-            - name: MY_POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+            # - name: MY_POD_NAME
+            #   valueFrom:
+            #     fieldRef:
+            #       fieldPath: metadata.name
+            # - name: NAMESPACE
+            #   valueFrom:
+            #     fieldRef:
+            #       fieldPath: metadata.namespace
             - name: RABBITMQ_DEFAULT_USER
               value: guest
             - name: RABBITMQ_DEFAULT_PASS
@@ -90,22 +90,22 @@ spec:
             storage: 1Gi
 
 ---
-# Headless service for StatefulSet DNS names
-apiVersion: v1
-kind: Service
-metadata:
-  name: rabbitmq-headless
-spec:
-  clusterIP: None
-  selector:
-    app: rabbitmq
-  ports:
-    - name: epmd
-      port: 4369
-      targetPort: 4369
-    - name: cluster
-      port: 25672
-      targetPort: 25672
+# # Headless service for StatefulSet DNS names (for multiple stateful set )
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: rabbitmq-headless
+# spec:
+#   clusterIP: None
+#   selector:
+#     app: rabbitmq
+#   ports:
+#     - name: epmd
+#       port: 4369
+#       targetPort: 4369
+#     - name: cluster
+#       port: 25672
+#       targetPort: 25672
 
 ---
 # Regular service for client access

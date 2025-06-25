@@ -1,3 +1,94 @@
+# name: Build and Push Each Service
+
+# on:
+#   push:
+#     branches: [main]
+
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
+
+#     permissions:
+#       packages: write
+#       contents: read
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+
+
+#       - name: Log in to GitHub Container Registry
+#         run: docker login ghcr.io -u Kitiphol --password ${{ secrets.GH_PAT }}
+
+#       # Build & push Authentication
+#       - name: Build & push Authentication
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/Authentication
+#           push: true
+#           tags: ghcr.io/kitiphol/authentication:latest
+
+#       # Build & push UserService
+#       - name: Build & push UserService
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/UserService
+#           push: true
+#           tags: ghcr.io/kitiphol/userservice:latest
+
+#       # Build & push VideoService
+#       - name: Build & push VideoService
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/VideoService
+#           push: true
+#           tags: ghcr.io/kitiphol/videoservice:latest
+
+#       # Build & push WebsocketService
+#       - name: Build & push WebsocketService
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/WebsocketService
+#           push: true
+#           tags: ghcr.io/kitiphol/websocketservice:latest
+
+#       # Build & push VideoChunker
+#       - name: Build & push VideoChunker
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/VideoChunker
+#           push: true
+#           tags: ghcr.io/kitiphol/videochunker:latest
+
+#       # Build & push VideoConvertor
+#       - name: Build & push VideoConvertor
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/VideoConvertor
+#           push: true
+#           tags: ghcr.io/kitiphol/videoconvertor:latest
+
+#       # Build & push ThumbnailMaker
+#       - name: Build & push ThumbnailMaker
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./Backend/ThumbnailMaker
+#           push: true
+#           tags: ghcr.io/kitiphol/thumbnailmaker:latest
+
+#       # Build & push Frontend
+#       - name: Build & push Frontend
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ./frontend/toktik_frontend
+#           push: true
+#           tags: ghcr.io/kitiphol/toktik-frontend:latest
+
+
+
 name: Build and Push Each Service
 
 on:
@@ -19,9 +110,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-
       - name: Log in to GitHub Container Registry
-        run: docker login ghcr.io -u Kitiphol --password ${{ secrets.GH_PAT }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: Kitiphol
+          password: ${{ secrets.GH_PAT }}
 
       # Build & push Authentication
       - name: Build & push Authentication
@@ -29,6 +123,7 @@ jobs:
         with:
           context: ./Backend/Authentication
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/authentication:latest
 
       # Build & push UserService
@@ -37,6 +132,7 @@ jobs:
         with:
           context: ./Backend/UserService
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/userservice:latest
 
       # Build & push VideoService
@@ -45,6 +141,7 @@ jobs:
         with:
           context: ./Backend/VideoService
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videoservice:latest
 
       # Build & push WebsocketService
@@ -53,6 +150,7 @@ jobs:
         with:
           context: ./Backend/WebsocketService
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/websocketservice:latest
 
       # Build & push VideoChunker
@@ -61,6 +159,7 @@ jobs:
         with:
           context: ./Backend/VideoChunker
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videochunker:latest
 
       # Build & push VideoConvertor
@@ -69,6 +168,7 @@ jobs:
         with:
           context: ./Backend/VideoConvertor
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videoconvertor:latest
 
       # Build & push ThumbnailMaker
@@ -77,6 +177,7 @@ jobs:
         with:
           context: ./Backend/ThumbnailMaker
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/thumbnailmaker:latest
 
       # Build & push Frontend
@@ -85,4 +186,5 @@ jobs:
         with:
           context: ./frontend/toktik_frontend
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/toktik-frontend:latest

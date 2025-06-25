@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication
+  name: auth-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: authentication
+      app: auth-service
   template:
     metadata:
       labels:
-        app: authentication
+        app: auth-service
     spec:
       containers:
-        - name: authentication
-          image: your-docker-repo/authentication:latest
+        - name: auth-service
+          image: ghcr.io/kitiphol/authentication:latest
           ports:
             - containerPort: 8080
           envFrom:
@@ -24,10 +24,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication
+  name: auth-service
 spec:
   selector:
-    app: authentication
+    app: auth-service
   ports:
     - protocol: TCP
       port: 8080

@@ -13,4 +13,5 @@ resources:
   - video-convertor.yaml
   - frontend.yaml
   - traefik-cors-middleware.yaml
+  - middleware-sticky.yaml        # middleware before ingress
   - ingress.yaml

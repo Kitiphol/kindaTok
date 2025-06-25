@@ -5,32 +5,29 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-    "github.com/gin-contrib/cors"
-    "UserService/internal/middleware"
-    
+	"github.com/gin-contrib/cors"
+	"UserService/internal/middleware"
 )
 
 type RegisterHandler = handler.RegisterHandler
 
 func Setup() *gin.Engine {
-    r := gin.Default()
+	r := gin.Default()
 
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
-      // Configure CORS options
-    r.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"http://localhost:3000"}, // frontend origin
-        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-        ExposeHeaders:    []string{"Content-Length"},
-        AllowCredentials: true,
-        MaxAge:           12 * time.Hour,
-    }))
+	auth := r.Group("/api/user")
+	auth.Use(middleware.AuthMiddleware())
 
-    auth := r.Group("/api")
-    auth.Use(middleware.AuthMiddleware())
-    
-    reg := RegisterHandler{}
-    auth.POST("/updateUser", reg.Handle)
+	reg := RegisterHandler{}
+	auth.POST("/updateUser", reg.Handle)
 
-    return r
+	return r
 }

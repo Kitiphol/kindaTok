@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: websocket-service
-          image: your-docker-repo/websocket-service:latest
+          image: ghcr.io/kitiphol/websocketservice:latest
           ports:
             - containerPort: 8081
           volumeMounts:
