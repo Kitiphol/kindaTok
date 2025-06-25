@@ -1,4 +1,4 @@
-package machineryUtil
+package machineryutil
 
 import (
     "github.com/RichardKnop/machinery/v2"
