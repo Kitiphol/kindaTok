@@ -125,6 +125,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/authentication:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/authentication:cache
+          cache-to: type=inline
 
       # Build & push UserService
       - name: Build & push UserService
@@ -134,6 +136,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/userservice:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/userservice:cache
+          cache-to: type=inline
 
       # Build & push VideoService
       - name: Build & push VideoService
@@ -143,6 +147,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videoservice:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/videoservice:cache
+          cache-to: type=inline
 
       # Build & push WebsocketService
       - name: Build & push WebsocketService
@@ -152,6 +158,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/websocketservice:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/websocketservice:cache
+          cache-to: type=inline
 
       # Build & push VideoChunker
       - name: Build & push VideoChunker
@@ -161,6 +169,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videochunker:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/videochunker:cache
+          cache-to: type=inline
 
       # Build & push VideoConvertor
       - name: Build & push VideoConvertor
@@ -170,6 +180,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/videoconvertor:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/videoconvertor:cache
+          cache-to: type=inline
 
       # Build & push ThumbnailMaker
       - name: Build & push ThumbnailMaker
@@ -179,6 +191,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/thumbnailmaker:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/thumbnailmaker:cache
+          cache-to: type=inline
 
       # Build & push Frontend
       - name: Build & push Frontend
@@ -188,3 +202,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/kitiphol/toktik-frontend:latest
+          cache-from: type=registry,ref=ghcr.io/kitiphol/toktik-frontend:cache
+          cache-to: type=inline
