@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - name: authentication
+          image: your-docker-repo/authentication:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: authentication-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication
+spec:
+  selector:
+    app: authentication
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

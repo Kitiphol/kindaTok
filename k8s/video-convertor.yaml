@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videoconvertor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: videoconvertor
+  template:
+    metadata:
+      labels:
+        app: videoconvertor
+    spec:
+      containers:
+        - name: videoconvertor
+          image: your-docker-repo/videoconvertor:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: machinery-config
+              mountPath: /root/machinery.yaml
+              subPath: machinery.yaml
+      volumes:
+        - name: machinery-config
+          configMap:
+            name: machinery-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: videoconvertor
+spec:
+  selector:
+    app: videoconvertor
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

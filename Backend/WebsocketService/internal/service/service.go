@@ -37,12 +37,27 @@ func AddOrUpdateComment(c *gin.Context) {
         VideoID: videoID,
     }
 
-    // Save comment to DB
     if err := database.DB.Create(&comment).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add comment"})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"message": "Comment added/updated", "comment": comment})
+
+    var user entity.User
+    database.DB.First(&user, "id = ?", userID)
+
+    response := struct {
+        ID       uuid.UUID `json:"id"`
+        Content  string    `json:"content"`
+        Username string    `json:"username"`
+        IsUser   bool      `json:"isUser"`
+    }{
+        ID: comment.ID,
+        Content: comment.Content,
+        Username: user.Username,
+        IsUser: true,
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Comment added/updated", "comment": response})
 }
 
 func AddOrUpdateLike(c *gin.Context) {
@@ -160,12 +175,33 @@ func ListComments(c *gin.Context) {
         return
     }
     var comments []entity.Comment
-    if err := database.DB.Where("video_id = ?", videoID).Find(&comments).Error; err != nil {
+    if err := database.DB.Preload("User").Where("video_id = ?", videoID).Find(&comments).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
         return
     }
-    c.JSON(http.StatusOK, gin.H{"comments": comments})
+
+    userID, _ := middleware.GetUserIDFromContext(c)
+
+    type CommentResponse struct {
+        ID       uuid.UUID `json:"id"`
+        Content  string    `json:"content"`
+        Username string    `json:"username"`
+        IsUser   bool      `json:"isUser"`
+    }
+
+    var res []CommentResponse
+    for _, comment := range comments {
+        res = append(res, CommentResponse{
+            ID: comment.ID,
+            Content: comment.Content,
+            Username: comment.User.Username,
+            IsUser: comment.UserID == userID,
+        })
+    }
+
+    c.JSON(http.StatusOK, gin.H{"comments": res})
 }
+
 
 
 // Delete a like on a video (unlike)

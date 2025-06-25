@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-service
+  template:
+    metadata:
+      labels:
+        app: video-service
+    spec:
+      containers:
+        - name: video-service
+          image: your-docker-repo/video-service:latest
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: machinery-config
+              mountPath: /root/machinery.yaml
+              subPath: machinery.yaml
+      volumes:
+        - name: machinery-config
+          configMap:
+            name: machinery-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-service
+spec:
+  selector:
+    app: video-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP

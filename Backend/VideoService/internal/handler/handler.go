@@ -34,6 +34,7 @@ func (h *VideoHandler) GetAllVideosForUser(c *gin.Context) {
 
     videos, err := service.GetAllVideosForUser(userID)
     if err != nil {
+         log.Printf("[ERROR] GetAllVideosForUser: %v", err)
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }

@@ -27,6 +27,8 @@ export default function UpdateUserForm({ onClose, jwtToken }: UpdateUserFormProp
     }
 
     try {
+
+      // const response = await fetch('http://localhost:8081/api/updateUser', {
       const response = await fetch('http://localhost:8081/api/updateUser', {
         method: 'POST',
         headers: {

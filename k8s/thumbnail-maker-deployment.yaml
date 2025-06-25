@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thumbnailmaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thumbnailmaker
+  template:
+    metadata:
+      labels:
+        app: thumbnailmaker
+    spec:
+      containers:
+        - name: thumbnailmaker
+          image: your-docker-repo/thumbnailmaker:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: machinery-config
+              mountPath: /root/machinery.yaml
+              subPath: machinery.yaml
+      volumes:
+        - name: machinery-config
+          configMap:
+            name: machinery-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thumbnailmaker
+spec:
+  selector:
+    app: thumbnailmaker
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
