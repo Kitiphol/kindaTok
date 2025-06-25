@@ -1,4 +1,4 @@
-package machineryUtil
+package machineryutil
 
 import (
 	"fmt"
