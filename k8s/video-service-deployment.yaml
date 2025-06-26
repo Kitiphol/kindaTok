@@ -18,15 +18,10 @@ spec:
         - name: video-service
           image: ghcr.io/kitiphol/videoservice:latest
           ports:
-            - containerPort: 8081
-          volumeMounts:
-            - name: machinery-config
-              mountPath: /root/machinery.yaml
-              subPath: machinery.yaml
-      volumes:
-        - name: machinery-config
-          configMap:
-            name: machinery-config
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: p2-secret
 ---
 apiVersion: v1
 kind: Service
@@ -38,5 +33,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8081
+      targetPort: 8080
   type: ClusterIP

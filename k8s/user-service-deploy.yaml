@@ -19,6 +19,9 @@ spec:
           image: ghcr.io/kitiphol/userservice:latest
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: p2-secret
 ---
 apiVersion: v1
 kind: Service

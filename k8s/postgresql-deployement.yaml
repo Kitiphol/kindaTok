@@ -12,8 +12,6 @@ spec:
       labels:
         app: postgres
     spec:
-      imagePullSecrets:
-        - name: ghcr-secret
       containers:
         - name: postgres
           image: postgres:latest
@@ -23,29 +21,24 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: p2-secrets
-                  key: db_name
+                  name: p2-secret
+                  key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: p2-secrets
-                  key: db_username
+                  name: p2-secret
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: p2-secrets
-                  key: db_password
-            - name: POSTGRES_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: p2-secrets
-                  key: db_root_password
+                  name: p2-secret
+                  key: POSTGRES_PASS
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgres-storage
-          emptyDir: {}   # For demo only. Use a PersistentVolumeClaim for real data!
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
