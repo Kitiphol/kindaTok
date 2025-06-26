@@ -162,7 +162,7 @@ export default function Home() {
     try {
       const [vRes, lRes, vwRes, cRes] = await Promise.all([
 
-        fetch(`http://localhost/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         fetch(`http://localhost/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         fetch(`http://localhost/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         fetch(`http://localhost/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
