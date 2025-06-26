@@ -80,6 +80,7 @@ metadata:
   name: gateway-ingress
   annotations:
     ingressClassName: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: default-cors@kubernetescrd
 spec:
   rules:
     - http:
