@@ -16,7 +16,8 @@ spec:
         - name: ghcr-secret
       containers:
         - name: video-convertor
-          image: ghcr.io/kitiphol/videoconvertor:latest@sha256:c87b8112206e7f6bc990a13a9b9f83a4e0c56101e69b5cb93b6603a01cb959ad
+          image: ghcr.io/kitiphol/videoconvertor:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:

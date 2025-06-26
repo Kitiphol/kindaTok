@@ -16,7 +16,8 @@ spec:
         - name: ghcr-secret
       containers:
         - name: auth-service
-          image: ghcr.io/kitiphol/authentication@sha256:94afb6c06076ef0b077086e399516a70b408adfc7c111e22aa36ec3ae2aa26df
+          image: ghcr.io/kitiphol/websocketservice:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:

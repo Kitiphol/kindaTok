@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: user-service
-          image: ghcr.io/kitiphol/userservice:latest@sha256:1b5be90a3014e320949236291eafc16bb81614ce4699d7218067aef213ccd468
+          image: ghcr.io/kitiphol/userservice:latest
           ports:
             - containerPort: 8080
 
