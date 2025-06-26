@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: video-service
-          image: ghcr.io/kitiphol/videoservice:latest
+          image: ghcr.io/kitiphol/videoservice:latest@sha256:f0e6ebf622043978fd19740b03abfcc69e4025997050a682e9abfa7fa23e3f9b
           ports:
             - containerPort: 8080
           envFrom:

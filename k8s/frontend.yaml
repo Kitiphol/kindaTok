@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: frontend-service
-          image: ghcr.io/kitiphol/p0-frontend:latest
+          image: ghcr.io/kitiphol/toktik-frontend:latest
           ports:
             - containerPort: 3000
           # env:

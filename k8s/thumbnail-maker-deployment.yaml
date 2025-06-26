@@ -16,9 +16,12 @@ spec:
         - name: ghcr-secret
       containers:
         - name: thumbnail-maker
-          image: ghcr.io/kitiphol/thumbnailmaker:latest
+          image: ghcr.io/kitiphol/thumbnailmaker:latest@sha256:8df98f9e2b03aa8659ee1d39e6d6465ac91124cf7a455e6a0d0730899eea1408
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: p2-secret
           volumeMounts:
             - name: machinery-config
               mountPath: ./machinery.yaml

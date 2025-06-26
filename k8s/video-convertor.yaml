@@ -16,12 +16,15 @@ spec:
         - name: ghcr-secret
       containers:
         - name: video-convertor
-          image: ghcr.io/kitiphol/videoconvertor:latest
+          image: ghcr.io/kitiphol/videoconvertor:latest@sha256:c87b8112206e7f6bc990a13a9b9f83a4e0c56101e69b5cb93b6603a01cb959ad
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: p2-secret
           volumeMounts:
             - name: machinery-config
-              mountPath: /root/machinery.yaml
+              mountPath: ./machinery.yaml
               subPath: machinery.yaml
       volumes:
         - name: machinery-config

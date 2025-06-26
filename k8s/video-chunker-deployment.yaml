@@ -16,9 +16,12 @@ spec:
         - name: ghcr-secret
       containers:
         - name: video-chunker
-          image: ghcr.io/kitiphol/videochunker:latest
+          image: ghcr.io/kitiphol/videochunker:latest@sha256:4b9e9cd57e8ba893ad37072d6afe19e9bde81d7dcb1307cc4e48e28dc76053dd
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: p2-secret
           volumeMounts:
             - name: machinery-config
               mountPath: ./machinery.yaml

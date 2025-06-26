@@ -29,6 +29,7 @@ jobs:
         with:
           context: ./Backend/Authentication
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/authentication:latest
 
       # Build & push UserService
@@ -37,6 +38,7 @@ jobs:
         with:
           context: ./Backend/UserService
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/userservice:latest
 
       # Build & push VideoService
@@ -45,6 +47,7 @@ jobs:
         with:
           context: ./Backend/VideoService
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/videoservice:latest
 
       # Build & push WebsocketService
@@ -53,6 +56,7 @@ jobs:
         with:
           context: ./Backend/WebsocketService
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/websocketservice:latest
 
       # Build & push VideoChunker
@@ -61,6 +65,7 @@ jobs:
         with:
           context: ./Backend/VideoChunker
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/videochunker:latest
 
       # Build & push VideoConvertor
@@ -69,6 +74,7 @@ jobs:
         with:
           context: ./Backend/VideoConvertor
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/videoconvertor:latest
 
       # Build & push ThumbnailMaker
@@ -77,6 +83,7 @@ jobs:
         with:
           context: ./Backend/ThumbnailMaker
           push: true
+          platforms: linux/arm64
           tags: ghcr.io/kitiphol/thumbnailmaker:latest
 
       # Build & push Frontend

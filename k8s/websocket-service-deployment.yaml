@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: websocket-service
-          image: ghcr.io/kitiphol/websocketservice:latest
+          image: ghcr.io/kitiphol/websocketservice:latest@sha256:10b3f677ac551302aa6b33dc8001a1d0244c63f5f4385310a18ecbe3cba08398
           ports:
             - containerPort: 8080
           envFrom:
