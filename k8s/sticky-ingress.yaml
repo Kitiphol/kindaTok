@@ -9,7 +9,7 @@ metadata:
     traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "false"
 spec:
   rules:
-    - host: myapp.local
+    - host: localhost
       http:
         paths:
           - path: /api/ws/
