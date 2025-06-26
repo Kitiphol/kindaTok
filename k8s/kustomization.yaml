@@ -12,7 +12,7 @@ resources:
   - video-chunker-deployment.yaml
   - video-convertor.yaml
   - frontend.yaml
-  - traefik-cors-middleware.yaml
+  # - traefik-cors-middleware.yaml
   # - middleware-sticky.yaml        # middleware before ingress
-  - non-sticky-ingress.yaml
+  - ingress.yaml
   # - sticky-ingress.yaml
