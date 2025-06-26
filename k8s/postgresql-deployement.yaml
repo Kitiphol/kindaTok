@@ -12,6 +12,8 @@ spec:
       labels:
         app: postgres
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: postgres
           image: postgres:latest

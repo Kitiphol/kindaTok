@@ -12,6 +12,8 @@ spec:
       labels:
         app: websocket-service
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: websocket-service
           image: ghcr.io/kitiphol/websocketservice:latest

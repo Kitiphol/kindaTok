@@ -12,9 +12,11 @@ spec:
       labels:
         app: frontend-service
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: frontend-service
-          image: ./frontend/toktik-frontend:latest
+          image: ghcr.io/kitiphol/p0-frontend:latest
           ports:
             - containerPort: 3000
           # env:

@@ -12,6 +12,8 @@ spec:
       labels:
         app: video-service
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: video-service
           image: ghcr.io/kitiphol/videoservice:latest

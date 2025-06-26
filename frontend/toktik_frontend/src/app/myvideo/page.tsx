@@ -59,8 +59,8 @@ export default function MyVideoPage() {
       }
 
       try {
+        const res = await fetch('/api/video/videos/user', {
         // const res = await fetch('http://localhost:8090/api/video/videos/user', {
-        const res = await fetch('http://localhost:8090/api/video/videos/user', {
           headers: { Authorization: `Bearer ${jwtToken}` },
         });
         if (!res.ok) throw new Error(`Error fetching videos: ${res.statusText}`);
@@ -84,8 +84,8 @@ export default function MyVideoPage() {
 
     try {
     
-        // const res = await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
-      const res = await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
+        const res = await fetch(`/api/video/videos/${videoID}`, {
+    //   const res = await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
@@ -121,17 +121,17 @@ export default function MyVideoPage() {
 
     try {
       const [vRes, lRes, vwRes, cRes] = await Promise.all([
+        fetch(`/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         // fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
+        fetch(`/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         // fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
-// fetch(`http://localhost:8092/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`http://localhost:8092/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost:8092/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
-// fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
       ]);
 
       if (!vRes.ok) throw new Error('Failed to load video details');
@@ -169,8 +169,8 @@ export default function MyVideoPage() {
 
     try {
       const currentlyLiked = videos[idx].hasLiked;
-      // const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
-      const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
+      const res = await fetch(`/api/ws/likes/videos/${videoID}`, {
+    //   const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
         method: currentlyLiked ? 'DELETE' : 'POST',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
@@ -203,8 +203,8 @@ export default function MyVideoPage() {
 
       const videoID = videos[selectedVideoIndex].videoID;
 
-      // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
-      const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
+      const res = await fetch(`/api/ws/comments/videos/${videoID}`, {
+    //   const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -237,8 +237,8 @@ export default function MyVideoPage() {
     try {
       const videoID = videos[selectedVideoIndex].videoID;
 
-      // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
-      const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
+      const res = await fetch(`/api/ws/comments/videos/${videoID}/${commentID}`, {
+    //   const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
