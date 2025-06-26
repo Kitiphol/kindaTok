@@ -106,7 +106,7 @@ export default function LoginForm({ onClose, onSuccessLogin }: { onClose: () => 
     try {
 
 
-      const response = await fetch('http://localhost/api/user/login', {
+      const response = await fetch('http://127.0.0.1/api/user/login', {
       // const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
