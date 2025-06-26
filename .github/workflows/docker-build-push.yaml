@@ -215,3 +215,5 @@ jobs:
 #           tags: ghcr.io/kitiphol/toktik-frontend:latest
 #           cache-from: type=registry,ref=ghcr.io/kitiphol/toktik-frontend:cache
 #           cache-to: type=inline
+
+# i don't know why the above code is not working, but the below code works
