@@ -4,7 +4,7 @@ metadata:
   name: gateway-ingress
   annotations:
     ingressClassName: traefik
-    traefik.ingress.kubernetes.io/router.middlewares: default-sticky-session@kubernetescrd
+    # traefik.ingress.kubernetes.io/router.middlewares: default-sticky-session@kubernetescrd
 spec:
   rules:
     - host: localhost
@@ -31,13 +31,15 @@ spec:
                 name: video-service
                 port:
                   number: 8080
-          # - path: /api/ws/
-          #   pathType: Prefix
-          #   backend:
-          #     service:
-          #       name: websocket-service
-          #       port:
-          #         number: 8080
+
+          - path: /api/ws/
+            pathType: Prefix
+            backend:
+              service:
+                name: websocket-service
+                port:
+                  number: 8080
+
           - path: /
             pathType: Prefix
             backend:

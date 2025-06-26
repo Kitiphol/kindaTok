@@ -90,6 +90,7 @@ const handleUpload = async () => {
     // Step 1: Get a presigned URL from the backend
 
     const res = await fetch('/api/video/videos', {
+    // const res = await fetch('http://localhost:8080/api/video/videos', {
     // const res = await fetch('http://localhost:8090/api/video/videos', {
       method: 'POST',
       headers: {
@@ -126,6 +127,9 @@ const handleUpload = async () => {
 
 
     const checkRes = await fetch(`/api/video/videos/check?videoID=${videoID}`, {
+
+    // const checkRes = await fetch(`http://localhost:8080/api/video/videos/check?videoID=${videoID}`, {
+
     // const checkRes = await fetch(`http://localhost:8090/api/video/videos/check?videoID=${videoID}`, {
       method: 'GET',
       headers: {
@@ -151,6 +155,7 @@ const handleUpload = async () => {
       try {
 
         await fetch(`/api/video/videos/${videoID}`, {
+          // await fetch(`http://localhost:8080/api/video/videos/${videoID}`, {
         // await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
           method: 'DELETE',
           headers: {

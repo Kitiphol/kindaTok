@@ -63,6 +63,8 @@ export default function Home() {
     try {
 
       const res = await fetch('/api/video/videos');
+      // const res = await fetch('http://localhost:8080/api/video/videos');
+
       // const res = await fetch('http://localhost:8090/api/video/videos');
       const list: VideoThumbInfoBackend[] = res.ok ? await res.json() : [];
       const sorted = [...list].sort((a, b) => a.videoID.localeCompare(b.videoID));
@@ -74,6 +76,8 @@ export default function Home() {
 
 
             const statusRes = await fetch(`/api/ws/likes/videos/${v.videoID}`,
+            // const statusRes = await fetch(`http://localhost:8080/api/ws/likes/videos/${v.videoID}`,
+
             // const statusRes = await fetch(`http://localhost:8092/api/ws/likes/videos/${v.videoID}`,
 
               
@@ -129,6 +133,8 @@ export default function Home() {
       const currentlyLiked = videos[idx].hasLiked;
 
       const res = await fetch(`/api/ws/likes/videos/${videoID}`, {
+      // const res = await fetch(`http://localhost:8090/api/ws/likes/videos/${videoID}`, {
+
       // const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
         method: currentlyLiked ? 'DELETE' : 'POST',
         headers: { Authorization: `Bearer ${jwtToken}` },
@@ -160,6 +166,12 @@ export default function Home() {
         fetch(`/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         fetch(`/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
         fetch(`/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+
+
+        // fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost:8080/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost:8080/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
 
         // fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
@@ -196,6 +208,8 @@ export default function Home() {
       const videoID = videos[selectedVideoIndex].videoID;
 
       const res = await fetch(`/api/ws/comments/videos/${videoID}`, {
+      // const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}`, {
+
       // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
         method: 'POST',
         headers: {
@@ -224,6 +238,8 @@ export default function Home() {
 
 
       const res = await fetch(`/api/ws/comments/videos/${videoID}/${commentID}`, {
+      // const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}/${commentID}`, {
+
       // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwtToken}` },

@@ -15,4 +15,4 @@ resources:
   - traefik-cors-middleware.yaml
   # - middleware-sticky.yaml        # middleware before ingress
   - non-sticky-ingress.yaml
-  - sticky-ingress.yaml
+  # - sticky-ingress.yaml
