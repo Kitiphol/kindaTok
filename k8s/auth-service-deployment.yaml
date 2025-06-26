@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: auth-service
-          image: ghcr.io/kitiphol/websocketservice:latest
+          image: ghcr.io/kitiphol/authentication:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
