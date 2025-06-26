@@ -62,7 +62,7 @@ export default function Home() {
     setLoading(true);
     try {
 
-      const res = await fetch('/api/video/videos');
+      const res = await fetch('http://localhost/api/video/videos');
       // const res = await fetch('http://localhost:8080/api/video/videos');
 
       // const res = await fetch('http://localhost:8090/api/video/videos');
@@ -75,7 +75,7 @@ export default function Home() {
           if (token) {
 
 
-            const statusRes = await fetch(`/api/ws/likes/videos/${v.videoID}`,
+            const statusRes = await fetch(`http://localhost/api/ws/likes/videos/${v.videoID}`,
             // const statusRes = await fetch(`http://localhost:8080/api/ws/likes/videos/${v.videoID}`,
 
             // const statusRes = await fetch(`http://localhost:8092/api/ws/likes/videos/${v.videoID}`,
@@ -132,7 +132,7 @@ export default function Home() {
     try {
       const currentlyLiked = videos[idx].hasLiked;
 
-      const res = await fetch(`/api/ws/likes/videos/${videoID}`, {
+      const res = await fetch(`http://localhost/api/ws/likes/videos/${videoID}`, {
       // const res = await fetch(`http://localhost:8090/api/ws/likes/videos/${videoID}`, {
 
       // const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
@@ -162,10 +162,10 @@ export default function Home() {
     try {
       const [vRes, lRes, vwRes, cRes] = await Promise.all([
 
-        fetch(`/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        fetch(`/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
 
         // fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
@@ -207,7 +207,7 @@ export default function Home() {
       setIsSendingComment(true);
       const videoID = videos[selectedVideoIndex].videoID;
 
-      const res = await fetch(`/api/ws/comments/videos/${videoID}`, {
+      const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}`, {
       // const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}`, {
 
       // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
@@ -237,7 +237,7 @@ export default function Home() {
       const videoID = videos[selectedVideoIndex].videoID;
 
 
-      const res = await fetch(`/api/ws/comments/videos/${videoID}/${commentID}`, {
+      const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}/${commentID}`, {
       // const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}/${commentID}`, {
 
       // const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {

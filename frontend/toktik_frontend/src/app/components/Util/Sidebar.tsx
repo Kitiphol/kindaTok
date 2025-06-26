@@ -117,7 +117,7 @@ export default function Sidebar({
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition mx-auto mt-6"
           onClick={(e) => {
             e.preventDefault();
-            fetch("/api/user/ping", {
+            fetch("http://localhost/api/user/ping", {
             // fetch("http://localhost:8080/api/user/ping", {
               mode: "cors",
               headers: {

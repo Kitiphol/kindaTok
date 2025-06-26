@@ -21,7 +21,7 @@ function Button2({
       onClick(e); // if custom onClick passed, call it
     } else {
       try {
-        const response = await fetch("/api/auth/ping", {
+        const response = await fetch("http://localhost/api/auth/ping", {
         // const response = await fetch("http://localhost:8080/api/auth/ping", {
           mode: "cors", // good to add this explicitly
         });
