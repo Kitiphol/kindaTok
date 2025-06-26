@@ -43,67 +43,76 @@ jobs:
       #     tags: ghcr.io/kitiphol/authentication:latest
 
       # Build & push UserService
-      - name: Build & push UserService
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/UserService
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/userservice:latest
+      - name: Build the userservice image
+        working-directory: ./Backend/UserService
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/userservice:latest
 
-      # Build & push VideoService
-      - name: Build & push VideoService
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/VideoService
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/videoservice:latest
+      - name: Push the userservice image
+        run: |
+          docker push ghcr.io/kitiphol/userservice:latest
 
-      # Build & push WebsocketService
-      - name: Build & push WebsocketService
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/WebsocketService
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/websocketservice:latest
+      - name: Build the videoservice image
+        working-directory: ./Backend/VideoService
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/videoservice:latest
 
-      # Build & push VideoChunker
-      - name: Build & push VideoChunker
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/VideoChunker
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/videochunker:latest
+      - name: Push the videoservice image
+        run: |
+          docker push ghcr.io/kitiphol/videoservice:latest
 
-      # Build & push VideoConvertor
-      - name: Build & push VideoConvertor
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/VideoConvertor
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/videoconvertor:latest
+      - name: Build the websocketservice image
+        working-directory: ./Backend/WebsocketService
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/websocketservice:latest
 
-      # Build & push ThumbnailMaker
-      - name: Build & push ThumbnailMaker
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/ThumbnailMaker
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/thumbnailmaker:latest
+      - name: Push the websocketservice image
+        run: |
+          docker push ghcr.io/kitiphol/websocketservice:latest
 
-      # Build & push Frontend
-      - name: Build & push Frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend/toktik_frontend
-          push: true
-          platforms: linux/arm64
-          tags: ghcr.io/kitiphol/toktik-frontend:latest
+      - name: Build the videochunker image
+        working-directory: ./Backend/VideoChunker
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/videochunker:latest
+
+      - name: Push the videochunker image
+        run: |
+          docker push ghcr.io/kitiphol/videochunker:latest
+
+      - name: Build the videoconvertor image
+        working-directory: ./Backend/VideoConvertor
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/videoconvertor:latest
+
+      - name: Push the videoconvertor image
+        run: |
+          docker push ghcr.io/kitiphol/videoconvertor:latest
+
+      - name: Build the thumbnailmaker image
+        working-directory: ./Backend/ThumbnailMaker
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/thumbnailmaker:latest
+
+      - name: Push the thumbnailmaker image
+        run: |
+          docker push ghcr.io/kitiphol/thumbnailmaker:latest
+
+      - name: Build the toktik-frontend image
+        working-directory: ./frontend/toktik_frontend
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/toktik-frontend:latest
+
+      - name: Push the toktik-frontend image
+        run: |
+          docker push ghcr.io/kitiphol/toktik-frontend:latest
+
 
 
 
