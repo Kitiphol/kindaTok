@@ -23,14 +23,24 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: docker login ghcr.io -u Kitiphol --password ${{ secrets.GH_PAT }}
 
+      - name: Build the auth image
+        working-directory: ./Backend/Authentication
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/authentication:latest
+          
+      - name: Push the auth image
+        run: | 
+          docker push ghcr.io/kitiphol/authentication:latest
+
       # Build & push Authentication
-      - name: Build & push Authentication
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend/Authentication
-          push: true
-          # platforms: linux/arm64
-          tags: ghcr.io/kitiphol/authentication:latest
+      # - name: Build & push Authentication
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: ./Backend/Authentication
+      #     push: true
+      #     # platforms: linux/arm64
+      #     tags: ghcr.io/kitiphol/authentication:latest
 
       # Build & push UserService
       - name: Build & push UserService
