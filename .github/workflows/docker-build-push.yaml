@@ -94,11 +94,11 @@ jobs:
       #   run: |
       #     docker push ghcr.io/kitiphol/thumbnailmaker:latest
 
-      # - name: Build the toktik-frontend image
-      #   working-directory: ./frontend/toktik_frontend
-      #   run: |
-      #     docker build . --file ./Dockerfile \
-      #     --tag ghcr.io/kitiphol/toktik-frontend:latest
+      - name: Build the toktik-frontend image
+        working-directory: ./frontend/toktik_frontend
+        run: |
+          docker build . --file ./Dockerfile \
+          --tag ghcr.io/kitiphol/toktik-frontend:latest
 
       - name: Push the toktik-frontend image
         run: |
