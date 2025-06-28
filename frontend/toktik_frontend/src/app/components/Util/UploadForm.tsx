@@ -89,9 +89,8 @@ const handleUpload = async () => {
   try {
     // Step 1: Get a presigned URL from the backend
 
-    const res = await fetch('http://localhost/api/video/videos', {
-    // const res = await fetch('http://localhost:8080/api/video/videos', {
-    // const res = await fetch('http://localhost:8090/api/video/videos', {
+    // const res = await fetch('http://localhost/api/video/videos', {
+    const res = await fetch('http://localhost:8090/api/video/videos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,11 +125,10 @@ const handleUpload = async () => {
     // Step 3: Confirm upload status
 
 
-    const checkRes = await fetch(`http://localhost/api/video/videos/check?videoID=${videoID}`, {
+    // const checkRes = await fetch(`http://localhost/api/video/videos/check?videoID=${videoID}`, {
 
-    // const checkRes = await fetch(`http://localhost:8080/api/video/videos/check?videoID=${videoID}`, {
 
-    // const checkRes = await fetch(`http://localhost:8090/api/video/videos/check?videoID=${videoID}`, {
+    const checkRes = await fetch(`http://localhost:8090/api/video/videos/check?videoID=${videoID}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -154,9 +152,8 @@ const handleUpload = async () => {
     if (videoID) {
       try {
 
-        await fetch(`http://localhost/api/video/videos/${videoID}`, {
-          // await fetch(`http://localhost:8080/api/video/videos/${videoID}`, {
-        // await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
+        // await fetch(`http://localhost/api/video/videos/${videoID}`, {
+        await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,

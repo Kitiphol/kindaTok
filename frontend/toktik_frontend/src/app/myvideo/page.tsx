@@ -5,6 +5,7 @@ import { ImEye, ImArrowLeft2, ImArrowRight2 } from 'react-icons/im';
 import { BsFillHandThumbsUpFill } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
 import { HlsPlayer } from '../components/HlsPlayer/hls'; // Your existing HlsPlayer component
+import UploadBox from '../components/Util/UploadBox';
 type VideoThumbInfo = {
   videoID: string;
   thumbnailURL: string;
@@ -59,15 +60,15 @@ export default function MyVideoPage() {
       }
 
       try {
-        const res = await fetch('http://localhost/api/video/videos/user', {
-        // const res = await fetch('http://localhost:8080/api/video/videos/user', {
-
-        // const res = await fetch('http://localhost:8090/api/video/videos/user', {
+        // const res = await fetch('http://localhost/api/video/videos/user', {
+        const res = await fetch('http://localhost:8090/api/video/videos/user', {
           headers: { Authorization: `Bearer ${jwtToken}` },
         });
         if (!res.ok) throw new Error(`Error fetching videos: ${res.statusText}`);
         const data: VideoThumbInfo[] = await res.json();
-        setVideos(data);
+        // setVideos(data);
+        setVideos(Array.isArray(data) ? data : []);
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -86,10 +87,9 @@ export default function MyVideoPage() {
 
     try {
     
-        const res = await fetch(`http://localhost/api/video/videos/${videoID}`, {
-    //   const res = await fetch(`http://localhost:8080/api/video/videos/${videoID}`, {
+        // const res = await fetch(`http://localhost/api/video/videos/${videoID}`, {
 
-    //   const res = await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
+      const res = await fetch(`http://localhost:8090/api/video/videos/${videoID}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
@@ -125,23 +125,19 @@ export default function MyVideoPage() {
 
     try {
       const [vRes, lRes, vwRes, cRes] = await Promise.all([
-        fetch(`http://localhost/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-         // fetch(`http://localhost:8080/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8090/api/video/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
-        fetch(`http://localhost/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8080/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
 
-        fetch(`http://localhost/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8080/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8092/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/ws/views/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
-        fetch(`http://localhost/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
-        // fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
 
-        // fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        // fetch(`http://localhost/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
+        fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, { headers: { Authorization: `Bearer ${jwtToken}` } }),
       ]);
 
       if (!vRes.ok) throw new Error('Failed to load video details');
@@ -179,10 +175,9 @@ export default function MyVideoPage() {
 
     try {
       const currentlyLiked = videos[idx].hasLiked;
-      const res = await fetch(`http://localhost/api/ws/likes/videos/${videoID}`, {
-    //   const res = await fetch(`http://localhost:80980/api/ws/likes/videos/${videoID}`, {
+      // const res = await fetch(`http://localhost/api/ws/likes/videos/${videoID}`, {
 
-    //   const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
+      const res = await fetch(`http://localhost:8092/api/ws/likes/videos/${videoID}`, {
         method: currentlyLiked ? 'DELETE' : 'POST',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
@@ -215,10 +210,9 @@ export default function MyVideoPage() {
 
       const videoID = videos[selectedVideoIndex].videoID;
 
-      const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}`, {
-    //   const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}`, {
+      // const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}`, {
 
-    //   const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
+      const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -251,10 +245,8 @@ export default function MyVideoPage() {
     try {
       const videoID = videos[selectedVideoIndex].videoID;
 
-      const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}/${commentID}`, {
-    //   const res = await fetch(`http://localhost:8080/api/ws/comments/videos/${videoID}/${commentID}`, {
-
-    //   const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
+      // const res = await fetch(`http://localhost/api/ws/comments/videos/${videoID}/${commentID}`, {
+      const res = await fetch(`http://localhost:8092/api/ws/comments/videos/${videoID}/${commentID}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
@@ -271,195 +263,228 @@ export default function MyVideoPage() {
     }
   };
 
-  if (loading) return <div className="p-4">Loading your videos...</div>;
-  if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
-  if (!videos.length) return <div className="p-4">You have no uploaded videos.</div>;
+  // if (loading) return <div className="p-4">Loading your videos...</div>;
+  // if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
+  // if (!videos.length) return <div className="p-4">You have no uploaded videos.</div>;
+
+
+  
 
   return (
-    <div className="p-4 min-h-screen bg-gray-100">
-      <div className="flex justify-end mb-4">
-            <button
-            onClick={() => router.push('/')}
-            className="text-gray-500 hover:text-red-600 text-xl font-bold"
-            aria-label="Close"
-            >
-            ❌
-            </button>
-        </div>
+  <div className="p-4 min-h-screen bg-gray-100">
+    <div className="flex justify-end mb-4">
+      <button
+        onClick={() => router.push('/')}
+        className="text-gray-500 hover:text-red-600 text-xl font-bold"
+        aria-label="Close"
+      >
+        ❌
+      </button>
+    </div>
 
+    <UploadBox />
+
+    {loading ? (
+      <div className="text-gray-600">Loading your videos...</div>
+    ) : error ? (
+      <div className="text-red-600">Error: {error}</div>
+    ) : (
+      <>
         <h1 className="text-2xl font-bold mb-4 text-black">My Videos</h1>
-
-        <div className="flex flex-wrap gap-4">
+        {videos.length === 0 ? (
+          <div className="p-4 text-gray-600">You have no uploaded videos.</div>
+        ) : (
+          <div className="flex flex-wrap gap-4">
             {videos.map((video, idx) => (
-            <div
+              <div
                 key={video.videoID}
                 className="relative border rounded p-2 shadow hover:shadow-lg cursor-pointer flex-shrink-0 flex flex-col justify-between bg-white"
-                style={{
-                    width: '180px',
-                    height: '180px',
-                }}
+                style={{ width: '180px', height: '180px' }}
                 onClick={() => handleVideoClick(video.videoID, idx)}
-                >
+              >
                 {/* Delete button */}
                 <button
-                    onClick={(e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteVideo(video.videoID);
-                    }}
-                    className="absolute top-2 right-2 text-sm text-red-500 hover:text-red-700 z-10"
-                    title="Delete video"
+                  }}
+                  className="absolute top-2 right-2 text-sm text-red-500 hover:text-red-700 z-10"
+                  title="Delete video"
                 >
-                    ✖
+                  ✖
                 </button>
 
                 <img
-                    src={video.thumbnailURL}
-                    alt={video.title}
-                    className="w-full h-24 object-cover rounded"
+                  src={video.thumbnailURL}
+                  alt={video.title}
+                  className="w-full h-24 object-cover rounded"
                 />
 
                 <h2 className="mt-2 font-semibold truncate text-black">{video.title}</h2>
 
                 <div className="flex justify-between mt-1 text-sm text-gray-600 items-center">
-                    <span
+                  <span
                     onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(video.videoID, idx);
+                      e.stopPropagation();
+                      toggleLike(video.videoID, idx);
                     }}
                     className="flex items-center gap-1 cursor-pointer select-none"
-                    >
-                    <BsFillHandThumbsUpFill color={video.hasLiked ? '#dc2626' : '#6b7280'} />
+                  >
+                    <BsFillHandThumbsUpFill
+                      color={video.hasLiked ? '#dc2626' : '#6b7280'}
+                    />
                     {video.totalLikeCount}
-                    </span>
-                    <span className="flex items-center gap-1">
+                  </span>
+                  <span className="flex items-center gap-1">
                     <ImEye />
                     {video.totalViewCount}
-                    </span>
+                  </span>
                 </div>
-                </div>
-
-
+              </div>
             ))}
-        </div>
+          </div>
+        )}
+      </>
+    )}
 
+    {/* Modal Video Player */}
+    {playlistLoading && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded">Loading video...</div>
+      </div>
+    )}
 
-      {/* Modal Video Player */}
-      {playlistLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded">Loading video...</div>
-        </div>
-      )}
-
-      {selectedVideo && selectedVideoIndex !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded shadow-lg max-w-5xl w-full flex flex-col md:flex-row relative">
-            {/* Navigation Buttons */}
-            {selectedVideoIndex > 0 && (
-              <button
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black"
-                onClick={() => handleVideoClick(videos[selectedVideoIndex - 1].videoID, selectedVideoIndex - 1)}
-                aria-label="Previous video"
-              >
-                <ImArrowLeft2 />
-              </button>
-            )}
-            {selectedVideoIndex < videos.length - 1 && (
-              <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black"
-                onClick={() => handleVideoClick(videos[selectedVideoIndex + 1].videoID, selectedVideoIndex + 1)}
-                aria-label="Next video"
-              >
-                <ImArrowRight2 />
-              </button>
-            )}
-
-            {/* Close modal */}
+    {selectedVideo && selectedVideoIndex !== null && (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded shadow-lg max-w-5xl w-full flex flex-col md:flex-row relative">
+          {/* Navigation Buttons */}
+          {selectedVideoIndex > 0 && (
             <button
-              className="absolute top-2 right-2 text-2xl text-gray-600 hover:text-black"
-              onClick={() => {
-                setSelectedVideo(null);
-                setSelectedVideoIndex(null);
-                setNewComment('');
-              }}
-              aria-label="Close video modal"
+              className="absolute left-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black"
+              onClick={() =>
+                handleVideoClick(
+                  videos[selectedVideoIndex - 1].videoID,
+                  selectedVideoIndex - 1
+                )
+              }
+              aria-label="Previous video"
             >
-              &times;
+              <ImArrowLeft2 />
             </button>
+          )}
+          {selectedVideoIndex < videos.length - 1 && (
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-3xl text-gray-600 hover:text-black"
+              onClick={() =>
+                handleVideoClick(
+                  videos[selectedVideoIndex + 1].videoID,
+                  selectedVideoIndex + 1
+                )
+              }
+              aria-label="Next video"
+            >
+              <ImArrowRight2 />
+            </button>
+          )}
 
-            {/* Video player */}
-            <div className="md:w-2/3 w-full flex items-center justify-center bg-black rounded">
-              <HlsPlayer playlistUrl={selectedVideo.playlist} />
+          {/* Close modal */}
+          <button
+            className="absolute top-2 right-2 text-2xl text-gray-600 hover:text-black"
+            onClick={() => {
+              setSelectedVideo(null);
+              setSelectedVideoIndex(null);
+              setNewComment('');
+            }}
+            aria-label="Close video modal"
+          >
+            &times;
+          </button>
+
+          {/* Video player */}
+          <div className="md:w-2/3 w-full flex items-center justify-center bg-black rounded">
+            <HlsPlayer playlistUrl={selectedVideo.playlist} />
+          </div>
+
+          {/* Video info & comments */}
+          <div className="md:w-1/3 w-full p-4 flex flex-col">
+            <h2 className="text-xl font-bold truncate mb-2">
+              {selectedVideo.title}
+            </h2>
+
+            {/* Like and views */}
+            <div className="flex gap-4 items-center mb-4">
+              <span
+                onClick={() =>
+                  toggleLike(
+                    videos[selectedVideoIndex].videoID,
+                    selectedVideoIndex
+                  )
+                }
+                className="cursor-pointer"
+                aria-label={modalHasLiked ? 'Unlike video' : 'Like video'}
+              >
+                <BsFillHandThumbsUpFill
+                  size={22}
+                  color={modalHasLiked ? '#dc2626' : '#6b7280'}
+                />
+              </span>
+              <span>{selectedVideo.totalLikeCount}</span>
+              <ImEye size={18} />
+              <span>{selectedVideo.totalViewCount}</span>
             </div>
 
-            {/* Video info & comments */}
-            <div className="md:w-1/3 w-full p-4 flex flex-col">
-              <h2 className="text-xl font-bold truncate mb-2">{selectedVideo.title}</h2>
-
-              {/* Like and views */}
-              <div className="flex gap-4 items-center mb-4">
-                <span
-                  onClick={() => toggleLike(videos[selectedVideoIndex].videoID, selectedVideoIndex)}
-                  className="cursor-pointer"
-                  aria-label={modalHasLiked ? 'Unlike video' : 'Like video'}
-                >
-                  <BsFillHandThumbsUpFill size={22} color={modalHasLiked ? '#dc2626' : '#6b7280'} />
-                </span>
-                <span>{selectedVideo.totalLikeCount}</span>
-                <ImEye size={18} />
-                <span>{selectedVideo.totalViewCount}</span>
+            {/* Comments section */}
+            <div className="flex flex-col flex-grow">
+              <h3 className="font-semibold mb-2">Comments</h3>
+              <div className="flex-grow overflow-y-auto max-h-48 space-y-2 border border-gray-300 p-2 rounded">
+                {selectedVideo.comments.length ? (
+                  selectedVideo.comments.map((c) => (
+                    <div
+                      key={c.id}
+                      className="flex justify-between items-center border-b pb-1"
+                    >
+                      <span>
+                        <strong>{c.username}:</strong> {c.content}
+                      </span>
+                      {c.isUser && (
+                        <button
+                          onClick={() => handleDeleteComment(c.id)}
+                          className="text-red-600 hover:text-red-800 ml-2"
+                          title="Delete comment"
+                          aria-label="Delete comment"
+                        >
+                          🗑️
+                        </button>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-gray-400">No comments yet.</div>
+                )}
               </div>
 
-              {/* Comments section */}
-              <div className="flex flex-col flex-grow">
-                <h3 className="font-semibold mb-2">Comments</h3>
-                <div className="flex-grow overflow-y-auto max-h-48 space-y-2 border border-gray-300 p-2 rounded">
-                  {selectedVideo.comments.length ? (
-                    selectedVideo.comments.map((c) => (
-                      <div
-                        key={c.id}
-                        className="flex justify-between items-center border-b pb-1"
-                      >
-                        <span>
-                          <strong>{c.username}:</strong> {c.content}
-                        </span>
-                        {c.isUser && (
-                          <button
-                            onClick={() => handleDeleteComment(c.id)}
-                            className="text-red-600 hover:text-red-800 ml-2"
-                            title="Delete comment"
-                            aria-label="Delete comment"
-                          >
-                            🗑️
-                          </button>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-gray-400">No comments yet.</div>
-                  )}
-                </div>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="mt-2 p-2 border border-gray-300 rounded resize-none"
+                rows={2}
+                aria-label="Add a comment"
+              />
 
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add a comment..."
-                  className="mt-2 p-2 border border-gray-300 rounded resize-none"
-                  rows={2}
-                  aria-label="Add a comment"
-                />
-
-                <button
-                  onClick={handleSendComment}
-                  disabled={isSendingComment || !newComment.trim()}
-                  className="mt-2 px-4 py-1 bg-blue-600 text-white rounded disabled:opacity-50"
-                >
-                  {isSendingComment ? 'Sending...' : 'Send'}
-                </button>
-              </div>
+              <button
+                onClick={handleSendComment}
+                disabled={isSendingComment || !newComment.trim()}
+                className="mt-2 px-4 py-1 bg-blue-600 text-white rounded disabled:opacity-50"
+              >
+                {isSendingComment ? 'Sending...' : 'Send'}
+              </button>
             </div>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+  </div>
   );
+
 }
