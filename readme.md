@@ -30,7 +30,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3001](http://localhost:3001) in your browser.
 
 ---
 
@@ -59,16 +59,7 @@ Replace `<ServiceName>` with the actual service folder name, such as `Authentica
 
 ---
 
-## Docker (Optional)
+## Docker 
 
 You can also use Docker to build and run the services.  
 See the provided `Dockerfile` in each service directory and the [`docker-compose.yml`](docker-compose.yml) file for orchestration.
-
----
-
-## Notes
-
-- Make sure to configure environment variables as needed (see `.env` files).
-- For more details, check the individual `README.md` files in each service (if available).
-
----
